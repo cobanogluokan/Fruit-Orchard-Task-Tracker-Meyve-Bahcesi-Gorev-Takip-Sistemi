@@ -34,7 +34,7 @@ This is a desktop-based task management and analysis tool developed in Python fo
 ![Task Input Interface](screenshots/Capture-2.PNG)
 
 ### TCalendar View
-![Calendar View](screenshots/Capture-1.png)
+![Calendar View](screenshots/Capture-1.PNG)
 
 ---
 
