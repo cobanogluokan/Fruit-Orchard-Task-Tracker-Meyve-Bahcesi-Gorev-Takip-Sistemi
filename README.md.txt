@@ -32,3 +32,13 @@ Install required libraries with pip:
 
 ```bash
 pip install pandas openpyxl tkcalendar matplotlib ttkbootstrap
+
+
+## 📸 Screenshots
+
+### Task Input Interface (Görev Girişi Arayüzü)
+
+![Task Input Interface](screenshots/Capture-2.png)
+
+### TCalendar View
+![Calendar View](screenshots/Capture-1.png)
