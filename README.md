@@ -24,6 +24,18 @@ This is a desktop-based task management and analysis tool developed in Python fo
 - `tkcalendar` for calendar input
 - `matplotlib` for data visualization
 
+
+
+
+## 📸 Screenshots
+
+### Task Input Interface (Görev Girişi Arayüzü)
+
+![Task Input Interface](screenshots/Capture-2.png)
+
+### TCalendar View
+![Calendar View](screenshots/Capture-1.png)
+
 ---
 
 ## ⚙️ Installation
@@ -32,3 +44,5 @@ Install required libraries with pip:
 
 ```bash
 pip install pandas openpyxl tkcalendar matplotlib ttkbootstrap
+
+
