@@ -29,11 +29,11 @@ This is a desktop-based task management and analysis tool developed in Python fo
 
 ## 📸 Screenshots
 
-### Task Input Interface (Görev Girişi Arayüzü)
+### Task Input Interface 
 
 ![Task Input Interface](screenshots/Capture-2.PNG)
 
-### TCalendar View
+### Calendar View
 ![Calendar View](screenshots/Capture-1.PNG)
 
 ---
