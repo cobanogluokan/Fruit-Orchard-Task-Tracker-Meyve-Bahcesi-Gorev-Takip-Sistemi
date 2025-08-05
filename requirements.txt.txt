@@ -1,0 +1,10 @@
+pandas
+ios
+tkinter 
+ttk, messagebox, filedialog
+Calendar
+datetime
+matplotlib
+FigureCanvasTkAgg
+matplotlib.dates 
+Figure
