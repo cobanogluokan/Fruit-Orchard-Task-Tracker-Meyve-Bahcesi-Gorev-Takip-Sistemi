@@ -1,703 +1,622 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 2,
-   "id": "f3b4ce72-7545-485d-b5af-2626203266bd",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "Exception in Tkinter callback\n",
-      "Traceback (most recent call last):\n",
-      "  File \"C:\\Users\\okan.cobanoglu\\AppData\\Local\\anaconda3\\Lib\\tkinter\\__init__.py\", line 1967, in __call__\n",
-      "    return self.func(*args)\n",
-      "           ^^^^^^^^^^^^^^^^\n",
-      "  File \"C:\\Users\\okan.cobanoglu\\AppData\\Local\\Temp\\ipykernel_27048\\3855972898.py\", line 527, in <lambda>\n",
-      "    ttk.Button(date_frame1, text=\"...\", width=3, command=lambda: self.select_date(self.entry_start), style=\"secondary.TButton\").pack(side=\"left\")\n",
-      "                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n",
-      "  File \"C:\\Users\\okan.cobanoglu\\AppData\\Local\\Temp\\ipykernel_27048\\3855972898.py\", line 483, in select_date\n",
-      "    cal = Calendar(date_popup, selectmode='day', date_pattern='yyyy-mm-dd')\n",
-      "          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n",
-      "  File \"C:\\Users\\okan.cobanoglu\\AppData\\Local\\anaconda3\\Lib\\site-packages\\tkcalendar\\calendar_.py\", line 224, in __init__\n",
-      "    ttk.Frame.__init__(self, master, class_=classname, cursor=curs, name=name)\n",
-      "  File \"C:\\Users\\okan.cobanoglu\\AppData\\Local\\anaconda3\\Lib\\site-packages\\ttkbootstrap\\style.py\", line 5107, in __init__\n",
-      "    self.configure(style=ttkstyle)\n",
-      "  File \"C:\\Users\\okan.cobanoglu\\AppData\\Local\\anaconda3\\Lib\\site-packages\\tkcalendar\\calendar_.py\", line 1612, in configure\n",
-      "    self[item] = value\n",
-      "    ~~~~^^^^^^\n",
-      "  File \"C:\\Users\\okan.cobanoglu\\AppData\\Local\\anaconda3\\Lib\\site-packages\\tkcalendar\\calendar_.py\", line 517, in __setitem__\n",
-      "    if key not in self._properties:\n",
-      "                  ^^^^^^^^^^^^^^^^\n",
-      "AttributeError: 'Calendar' object has no attribute '_properties'\n"
-     ]
-    },
-    {
-     "data": {
-      "image/png": "iVBORw0KGgoAAAANSUhEUgAAA/AAAAJNCAYAAACWfJ4RAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjguNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8fJSN1AAAACXBIWXMAAA9hAAAPYQGoP6dpAAA/V0lEQVR4nO3dedxXc+L//+d1tVztqSyVUEJMg7Jnl3WKyd6QMcrnw0hh7MyMfUy2wQwGH1RjydpomGYwZOxLYxdNiBGyhkSpq/P7w6/316UVmRzu99vtut28z/u8z/t13u9zdfO4zlZVFEURAAAA4FutekkPAAAAAFg4AQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBD/A98tRTT2X//fdP586d07hx4zRu3DirrrpqDjzwwIwdO3au+c8+++xUVVXl5Zdfzt13352qqqrceOONS2Dk8/byyy+nqqpqoT/Dhg1b0kP9xt1yyy3Zaaedstxyy6Vhw4Zp3bp1tt5661x99dWZOXNmZb6qqqqcdNJJ38gY5nwf34bPu2PHjtlvv/2W9DCSJCeddFKqqqpSXV2dl156aa7np02blhYtWqSqquorj/mL6/vf+C7GjRuXk046KS+//PI39h4A1FV/SQ8AgP+OSy65JIMGDUqXLl1y6KGHpmvXrqmqqspzzz2XESNGZP31188LL7yQzp07V17Tr1+/bLrppmnXrl1at26dBx98MKutttoSXIu62rVrlwcffHCez02dOjV9+/ZNkmyxxRb/zWH9VxVFkQEDBmTYsGHp1atXfve732WFFVbIBx98kDFjxmTgwIF55513cuihhyZJHnzwwXTo0GEJj/qb9+c//zktWrRY0sOoo1mzZhk6dGhOPfXUOtNvuOGGzJw5Mw0aNFhs7zXnd+Pzv8+L27hx43LyySdnyy23TMeOHb+x9wHg/xHwAN8D999/fwYOHJjevXvnxhtvTMOGDSvP9ezZMwcffHBuuOGGNG7cuM7r2rVrl3bt2iVJampqstFGGy3S+3388cdp0qTJ4luB+ZjfmIqiyC677JIPPvggf/3rX9OpU6dvfCxLyllnnZVhw4bl5JNPzgknnFDnuZ122ilHH310Xnjhhcq0Rf0Oy6579+5Leghz6du3b4YPH56TTz451dX/7yDIyy+/PLvsskv+8pe/LLb3+jK/rwCUh0PoAb4HTj/99NSrVy+XXHJJnXj/vD322CPt27evM+0vf/lLevTokSZNmqR58+bZdttt59rjPefw4Mceeyy77757WrVqVdnrVxRFLrroonTr1i2NGzdOq1atsvvuu9c5jPiwww5L06ZN8+GHH841pr59+2a55Zarcwj4ojj11FMzatSonHzyydlhhx0q06dPn54jjjgi3bp1S8uWLdO6dev06NEjo0aNmmsZVVVVGTRoUIYOHZouXbqkcePGWW+99fLQQw+lKIqcddZZ6dSpU5o1a5aePXvWieQkueOOO9KnT5906NAhjRo1yiqrrJIDDzww77zzzjw/v2effTZ77bVXWrZsmeWWWy4DBgzIBx98sMD1nDlzZs4444ysvvrq+fWvfz3Pedq2bZtNN920znp9/hD6jh07zvfUg7vvvrsy34QJE7L33ntn2WWXTU1NTdZYY41ceOGFCxzfHKNGjcpaa62VmpqarLzyyjn//PMr6/15i7K9JMnjjz+eHXfcsTKW9u3bp3fv3pk0aVKd9VrY4ejdu3fPZpttNtf02traLL/88tl1110r0z799NOcdtppWX311VNTU5Nlllkm/fv3z9tvv71In0GSDBgwIK+++mruuOOOyrR///vfue+++zJgwIC55v8y2+sXffEQ+nvvvTdVVVUZMWLEXPP+6U9/SlVVVR599NHKtLFjx+bHP/5xWrdunUaNGqV79+65/vrrK88PGzYse+yxR5Jkq622+l6drgKwJAl4gO+42trajBkzJuutt15lb/qiuOaaa9KnT5+0aNEiI0aMyOWXX54pU6Zkyy23zH333TfX/LvuumtWWWWV3HDDDbn44ouTJAceeGAOO+ywbLPNNrn55ptz0UUX5dlnn83GG2+cN998M8lnUfPxxx/XiYMkef/99zNq1Kjss88+X+rQ4tGjR+fkk09Onz598stf/rLOczNmzMh7772XI488MjfffHNGjBiRTTfdNLvuumv+9Kc/zbWsW2+9NZdddlmGDBmSESNGZOrUqendu3eOOOKI3H///bngggty6aWXZty4cdltt91SFEXltS+++GJ69OiRP/7xj7n99ttzwgkn5OGHH86mm246zz9I7LbbbllttdVy00035dhjj80111yTX/ziFwtc17Fjx+a9995Lnz595orhRfXnP/85Dz74YOXn/vvvz5prrpmmTZtmxRVXTPLZodLrr79+nnnmmZxzzjm59dZb07t37xxyyCE5+eSTF7j8v//979l1113Tpk2bXHfddTnzzDMzYsSIDB8+fK55F2V7mTZtWrbddtu8+eabufDCC3PHHXfkvPPOy4orrpipU6d+qXXv379/7rvvvkyYMKHO9Ntvvz2vv/56+vfvnySZPXt2+vTpkyFDhmTvvffOX//61wwZMiR33HFHttxyy3zyySeL9H6rrrpqNttss1xxxRWVaVdccUU6duyYrbfeeq75v+z2uiCbbbZZunfvPs8/ulxwwQVZf/31s/766ydJxowZk0022STvv/9+Lr744owaNSrdunVL3759K4Heu3fvnH766UmSCy+8sLL99O7d+0uNC4AvqQDgO23y5MlFkuInP/nJXM/NmjWrmDlzZuVn9uzZRVEURW1tbdG+fftizTXXLGprayvzT506tVh22WWLjTfeuDLtxBNPLJIUJ5xwQp1lP/jgg0WS4pxzzqkz/dVXXy0aN25cHH300ZVp66yzTp1lFkVRXHTRRUWS4umnn17kdZ0wYUKx1FJLFauttlrxwQcfLHT+Oeu///77F927d6/zXJKibdu2xUcffVSZdvPNNxdJim7dulU+q6IoivPOO69IUjz11FPzfJ/Zs2cXM2fOLF555ZUiSTFq1KjKc3M+vzPPPLPOawYOHFg0atSozvt80bXXXlskKS6++OKFruvn1+vEE0+c7/ODBg0q6tevX4wePboybfvtty86dOgw12c6aNCgolGjRsV7771XFEVRTJw4sUhSDB06tDLP+uuvX6ywwgrFjBkzKtOmTp1atGnTpvj8/4Ys6vYyduzYIklx8803L3A9V1pppeJnP/vZAud55513ioYNGxbHH398nel77rlnsdxyyxUzZ84siqIoRowYUSQpbrrppjrzPfroo0WS4qKLLlrg+8z5jt9+++1i6NChRU1NTfHuu+8Ws2bNKtq1a1ecdNJJRVEURdOmTRc45gVtr19c33l9F0OHDi2SFI8//nhl2iOPPFIkKYYPH16Ztvrqqxfdu3evrP8cO+64Y9GuXbvKvwk33HBDkaQYM2bMAtcfgMXHHniA77F11103DRo0qPycc845SZLx48fn9ddfz09/+tM65+o2a9Ysu+22Wx566KF8/PHHdZa122671Xl86623pqqqKvvss09mzZpV+Wnbtm3WXnvtOodn9+/fPw888EDGjx9fmTZ06NCsv/76+eEPf7hI6/LRRx9l5513zqxZsxZ4AbMbbrghm2yySZo1a5b69eunQYMGufzyy/Pcc8/NNe9WW22Vpk2bVh6vscYaSZIf/ehHdfZ4z5n+yiuvVKa99dZb+fnPf54VVlih8j4rrbRSkszzvX784x/XebzWWmtl+vTpeeuttxZp/ReHIUOG5IILLsjFF1+cH/3oR0k+O4z7zjvvzC677JImTZrU+S579eqV6dOn56GHHprn8qZNm5axY8dm5513rnPqRrNmzbLTTjvVmXdRt5dVVlklrVq1yjHHHJOLL74448aN+8rr26ZNm+y0004ZPnx4Zs+enSSZMmVKRo0alX333Tf169evjG2ppZbKTjvtVGds3bp1S9u2betsywuzxx57pGHDhrn66qszevToTJ48eYGH+n+Z7XVh9tprryy77LJ19sL/4Q9/yDLLLFO54OMLL7yQ559/Pv369UuSub7vN954o87vKQD/XQIe4Dtu6aWXTuPGjevE5RzXXHNNHn300bkunvXuu+8myTwPuW/fvn1mz56dKVOm1Jn+xXnffPPNFEWR5ZZbrs4fCRo0aJCHHnqozrng/fr1S01NTeXw3HHjxuXRRx+tHMK8KPr3759nn302Q4cOzQ9+8IN5zjNy5MjsueeeWX755XPVVVflwQcfzKOPPpoBAwZk+vTpc83funXrOo/nROj8ps9ZxuzZs7Pddttl5MiROfroo3PnnXfmkUceqYTuvA65btOmTZ3HNTU18513jjmHuE+cOHG+8yyqq666Kscff3xOOOGE7L///pXp7777bmbNmpU//OEPc32PvXr1SpK5zuufY8qUKZVt4Iu+OG1Rt5eWLVvmn//8Z7p165bjjz8+Xbt2Tfv27XPiiSd+6WslJJ+dwvHaa69VzksfMWJEZsyYUSeq33zzzbz//vtp2LDhXGObPHnyfNd/Xpo2bZq+ffvmiiuuyOWXX55tttmm8oedL/qy2+vC1NTU5MADD8w111yT999/P2+//Xauv/76/M///E9le5tzqsKRRx4517oOHDgwyfy/bwC+ea5CD/AdV69evfTs2TO333573njjjTqhPSd0v3gf5zkx+cYbb8y1vNdffz3V1dVp1apVnelfPAd76aWXTlVVVe69995KHHze56e1atUqffr0yZ/+9KecdtppGTp0aBo1apS99tprkdbxt7/9bW688cYcffTR2X333ec731VXXZVOnTrluuuuqzPeGTNmLNL7LKpnnnkmTz75ZIYNG5af/exnlelfvNDd17XeeuuldevWGTVqVH77299+5fPg77jjjgwYMCD77bffXOe0t2rVKvXq1ctPf/rTHHzwwfN8/fyu8t+qVatUVVVVovDzJk+eXOfxl9le1lxzzVx77bUpiiJPPfVUhg0bllNOOSWNGzfOscceu9D1/bztt98+7du3z9ChQ7P99ttn6NCh2XDDDev8EWjppZdOmzZt8ve//32ey2jevPmXes8BAwbksssuy1NPPZWrr756vvN9E9vrQQcdlCFDhuSKK67I9OnTM2vWrPz85z+vPL/00ksnSY477rg6F/H7vC5dunzl9wfg6xHwAN8Dxx13XP72t7/l5z//eW688caFXhSuS5cuWX755XPNNdfkyCOPrMTDtGnTctNNN1WuTL8gO+64Y4YMGZLXXnste+6550LH2L9//1x//fUZPXp0rrrqquyyyy5ZaqmlFvq62267Lb/61a+yzTbbVC6qNT9VVVVp2LBhnRiaPHnyIl3V+8uYs/wvhugll1yyWN+nQYMGOeaYY3LMMcfk1FNPnes2cslnh/JPmDAhm2yyyTyX8cQTT2S33XZLz549c+mll871fJMmTbLVVlvl8ccfz1prrTXfuxjMS9OmTbPeeuvl5ptvztlnn1157UcffZRbb721zrxfdntJPvuc11577Zx77rkZNmxYHnvssUUe2xxz/jhx3nnn5d57783YsWPn+p523HHHXHvttamtrc2GG274pd/ji3r06FG5y8Auu+wy3/m+ie21Xbt22WOPPXLRRRfl008/zU477VQ5kiP57Hd/1VVXzZNPPrnQ36dFOUoEgMVLwAN8D2yyySa58MILM3jw4Kyzzjo54IAD0rVr11RXV+eNN97ITTfdlCSV88arq6tz5plnpl+/ftlxxx1z4IEHZsaMGTnrrLPy/vvvZ8iQIYv0ngcccED69++fsWPHZvPNN0/Tpk3zxhtv5L777suaa66Zgw46qDL/dtttlw4dOmTgwIGZPHnyIh0+P3HixOy1115p3LhxDjvssDq3wfq8Dh06pEOHDtlxxx0zcuTIDBw4MLvvvnteffXVnHrqqWnXrt1cVyL/OlZfffV07tw5xx57bIqiSOvWrXPLLbfUuX3Y4nLUUUflueeey4knnphHHnkke++9d1ZYYYV88MEHueeee3LppZfm5JNPnmfAf/jhh+nVq1caN26cI488MmPHjq3z/A9+8IO0aNEi559/fjbddNNsttlmOeigg9KxY8dMnTo1L7zwQm655Zbcdddd8x3fKaeckt69e2f77bfPoYcemtra2px11llp1qxZ3nvvvcp8i7q93Hrrrbnooouy8847Z+WVV05RFBk5cmTef//9bLvttl/pMxwwYEDOOOOM7L333mncuHHlfPA5fvKTn+Tqq69Or169cuihh2aDDTZIgwYNMmnSpIwZMyZ9+vRZYIjPy+WXX77Qeb6p7fXQQw+t/CFi6NChcz1/ySWX5Ec/+lG233777Lfffll++eXz3nvv5bnnnstjjz2WG264IUkq16e49NJL07x58zRq1CidOnWa63QQABajJXkFPQD+u5544omif//+RadOnYqampqiUaNGxSqrrFLsu+++xZ133jnX/DfffHOx4YYbFo0aNSqaNm1abL311sX9999fZ57PX2F7Xq644opiww03LJo2bVo0bty46Ny5c7HvvvsWY8eOnWve448/vkhSrLDCCnWufj8/c66qvbCfz191fciQIUXHjh2LmpqaYo011ij+7//+r7IOn5ekOPjgg+tMm3Nl77POOqvO9DFjxhRJihtuuKEybdy4ccW2225bNG/evGjVqlWxxx57FP/5z3/mGs/8Pr856zZx4sSFfg5FURSjRo0qevfuXSyzzDJFkqJly5ZFz549i6uuuqr49NNP66zXnPefsz7z+/n81cUnTpxYDBgwoFh++eWLBg0aFMsss0yx8cYbF6eddtpcn8/nr3xeFEXx5z//uVhzzTWLhg0bFiuuuGIxZMiQ4pBDDilatWo113osbHt5/vnni7322qvo3Llz0bhx46Jly5bFBhtsUAwbNqzOchblKvSft/HGGxdJin79+s3z+ZkzZxZnn312sfbaaxeNGjUqmjVrVqy++urFgQceWEyYMGGBy17Y78gc87oK/aJur4tyFfrP69ixY7HGGmvMdyxPPvlkseeeexbLLrts0aBBg6Jt27ZFz54957rjwXnnnVd06tSpqFev3gLfD4DFo6ooPnfTWgCg9I499tgss8wyOeKII5b0UOZp5syZ6datW5ZffvncfvvtS3o43ztPPfVU1l577Vx44YWVC9MBUA4OoQeA74innnoqU6ZMybRp03Lbbbd9awJ+//33z7bbbpt27dpl8uTJufjii/Pcc8/l/PPPX9JD+1558cUX88orr+T4449Pu3btFnj7OgC+nQQ8AHxHPPTQQ/nFL36Rhg0b5sQTT1zSw6mYOnVqjjzyyLz99ttp0KBB1llnnYwePTrbbLPNkh7a98qpp56aK6+8MmussUZuuOGGhV6IEoBvH4fQAwAAQAlUL+kBAAAAAAsn4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAogfpLegCLavbs2Xn99dfTvHnzVFVVLenhAAAAwNdWFEWmTp2a9u3bp7p6wfvYSxPwr7/+elZYYYUlPQwAAABY7F599dV06NBhgfOUJuCbN2+e5LOVatGixRIeDQAAAHx9H374YVZYYYVK8y5IaQJ+zmHzLVq0EPAAAAB8pyzKqeIuYgcAAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACQh4AAAAKAEBDwAAACUg4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJSDgAQAAoAQEPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAlIOABAACgBAQ8AAAAlICABwAAgBIQ8AAAAFACAh4AAABKQMADAABACdRf0gNYVEVRJEk+/PDDJTwSAAAAWDzmNO6c5l2Q0gT8u+++myRZYYUVlvBIAAAAYPGaOnVqWrZsucB5ShPwrVu3TpL85z//WehKAQAAQBkURZGpU6emffv2C523NAFfXf3Z6fotW7ZMixYtlvBoAAAAYPFY1J3ULmIHAAAAJSDgAQAAoARKE/A1NTU58cQTU1NTs6SHAgAAAP91VcWiXKseAAAAWKJKswceAAAAvs8EPAAAAJSAgAcAAIASEPAAAABQAgIeAAAASkDAAwAAQAkIeAAAACgBAQ8AAAAl8L0P+Nra2iU9BAAAAFio73XAjxs3LgMHDswbb7yxpIcCAAAAC1R/SQ9gSXnppZeyww47ZNKkSZk0aVKGDRuWZZZZZkkPCwAAAObpe7kH/pNPPsnFF1+cDTfcMHfccUeefvrp7L333nn77beX9NAAAABgnr6XAV9VVZWuXbtmzz33zNZbb50777wz48ePF/EAAAB8a1UVRVEs6UEsCdOmTUvTpk0rj8ePH59tt902Xbp0yTXXXJNlllkmtbW1eeaZZ7L22msvwZECAADA9yjgP/nkk8yaNSvNmzevTJuz6lVVVUmS559/Ptttt126dOmSYcOG5Te/+U1eeOGF3HDDDWnZsuUSGTcAAAAk35OAf+aZZ3LwwQfnww8/TL169bL77rtnn332SYcOHVJbW5t69eqlKIpUVVVl/Pjx+dGPfpT33nsvn3zySR544IGsu+66S3oVAAAA+J77zp8D/9JLL2XzzTfPGmuskeOOOy7rrLNObr755uy9996ZMGFC6tWrl9mzZ1f2wnfp0iUbbrhh6tevn8cee0y8AwAA8K3wnd8Df+GFF2bUqFG5/fbbK9P+8pe/5IILLsh7772X6667Lp07d64cTn/GGWfk+OOPz2OPPZZu3botoVEDAABAXd/5PfAffPBBxo8fn48++qgy7cc//nGOOOKItG7dOr/85S/z/vvvp6qqKrNmzcrqq6+ecePGiXcAAAC+Vb7zAd+1a9c0a9YsjzzySD5/sMH222+f3XffPY8//ngmTZqUJGnQoEH69OmT1VdffUkNFwAAAObpOx/wO+20U1q0aJGjjz46r7zySp3nDjjggLz//vv529/+Vpk251x4AAAA+Db5Tgd8bW1tqqur89e//jUffPBB9t577zz33HOV56dPn54uXbqkffv2S3CUAAAAsHDf6YvYzblFXJL85z//yQ477JDq6ur069cvP/jBD3Lvvfdm6NCheeSRR9K5c+clPFoAAACYv+/sHvhZs2alXr16efnllzNo0KAstdRSeeKJJ7Lhhhvm5ptvzuGHH577778///jHP8Q7AAAA33ql3wM/Y8aM1NTUJEmKoqhzDvvEiROzySabpHfv3rnooovSoEGDJJ9dmf6TTz5J06ZN07x58yUybgAAAPgySh3w48ePz5lnnpn+/ftn0003TfL/In769Onp2bNnVltttQwdOjRVVVVzBT4AAACURf0lPYCv6qWXXso222yTd999N59++mnq16+fjTbaqBLo9erVy6WXXpquXbtWpol3AAAAyqqUe+BnzJiRQw89NFOmTMk222yTyy67LCuvvHIOPfTQbLTRRkt6eAAAALDYlXIPfE1NTXr37p133nkn/fv3T/v27XPKKafk/PPPT5JKxH/+kHmHzwMAAFBmpdsDPyfEP/300zRs2LAy/ZZbbslpp51WZ0/8rFmz8sILL2T11VdfgiMGAACAr680e+CnTZuWoihSW1ubli1bVuJ9zr3ed9pppyTJaaedlvPPPz8zZ87MTTfdlFGjRuXpp59O06ZN7YEHAACgtEqxB/7pp5/O4YcfnkmTJmXZZZfNpptumt/85jeV52fPnp3q6s9uaX/LLbfkt7/9bSZOnJiPPvood999d9Zdd90lNXQAAABYLKqX9AAW5qWXXspWW22VNddcM4ceemi22WabXHzxxdlhhx3yn//8J0lSXV2dOX+H2GmnndKyZctMnz49Dz74oHgHAADgO+Fbvwf+kksuyZ/+9KfcddddqampSZI888wz2XHHHdOpU6fcdNNNad26dWbPnp2iKHLYYYflwgsvzBNPPJG11lprCY8eAAAAFo9v/R74SZMmZcqUKZV4r62tzQ9/+MPceeed+fe//52BAwcm+WwvfL169bL77rtn7Nix4h0AAIDvlG99wPfq1Suvv/56rr322iRJvXr1Ultbm86dO2f48OEZM2ZMRo8eneSzc+G32GKLrLPOOktyyAAAALDYfesDvlOnTundu3f+9Kc/ZcyYMUk+i/gkWXPNNdO0adNMmjQpSSoXsgMAAIDvmm998bZt2zb/8z//kw8//DDnnXde/v73v1eeW2655dKhQ4fKBey+5afzAwAAwFf2rb6I3cyZM9OgQYMkydixY3PcccflnXfeya677pp11103t99+e4YPH55//etfWXnllZfwaAEAAOCb860L+Dn3dJ81a1bq16+fl19+OYcffniuuuqqjB8/PrfccksuvPDCtG3bNg0bNsz//d//pVu3bkt62AAAAPCNWuKH0E+ePDmPPfZY7rnnnkq8J6nE+yabbJK2bdumcePG6d69e0444YS89NJLueeee3LXXXeJd1JVVZWXX375G3+fYcOGZamllprv83fffXeqqqry/vvvf+Njoa7/1jYwPx07dsx55523xN4fAIDvhyUa8E899VQ23XTT7Lnnntl9992z5ppr5tZbb82UKVOSJNttt1123HHHXHjhhamqqkry2R76pk2bpmXLlmnevPl8l73ffvtl5513nmu6yJq3oihy0kknpX379mncuHG23HLLPPvsswt8zUknnZSqqqq5flZfffXKPPMLm/POOy8dO3ac57Kqq6vTvn379OvXL6+++urXXrdhw4bVGV+zZs2y7rrrZuTIkV972d8l39VtYMstt5znGOf8fH4M3wXf1e8RAIAlGPBvvvlmdt111/Tt2ze33HJL7r///nTp0iWDBg3KFVdckSS56aab8sc//rES78m340rzn3766ZIewmJ35pln5ne/+10uuOCCPProo2nbtm223XbbTJ06dYGv69q1a9544406P/fdd99XGsOcZU2aNCnXXXddnn766ey5555faVlf1KJFi8r4Hn/88Wy//fbZc889M378+MWy/O+C7+o2MHLkyMq4HnnkkSTJP/7xj8q0Rx999Gst/9vmu/o9AgCwBAP+9ddfT5Lss88+WWONNbLqqqtm5MiR2XnnnXPRRRfl4osvTpcuXb7xYH/33Xez1157pUOHDmnSpEnWXHPNjBgxos48W265ZQYNGpTDDz88Sy+9dLbddtskybPPPpvevXunRYsWad68eTbbbLO8+OKLSZJHH3002267bZZeeum0bNkyW2yxRR577LE6y62qqspll12WXXbZJU2aNMmqq66av/zlL5Xna2trs//++6dTp05p3LhxunTpkvPPP7/OMuYcaXD22WenXbt2adOmTQ4++ODMnDlzkT+Doihy3nnn5Ze//GV23XXX/PCHP8zw4cPz8ccf55prrlnga+vXr5+2bdvW+Vl66aUX+b3ntaz27dtns802y//+7//moYceyocffviVlvd5VVVVlfGtuuqqOe2001JdXZ2nnnqqMs+nn36ao48+Ossvv3yaNm2aDTfcMHffffd8l/nuu+9mgw02yI9//ONMnz59nvM88MAD2XzzzdO4ceOssMIKOeSQQzJt2rTK8x07dszpp5+eAQMGpHnz5llxxRVz6aWX1lnGa6+9lr59+6ZVq1Zp06ZN+vTpU+dwcdvAgrVu3boyrmWWWSZJ0qZNm8q0cePGZYMNNkhNTU3atWuXY489NrNmzaq8fs7v/6BBg7LUUkulTZs2+dWvfrXAu1787ne/q9zmcoUVVsjAgQPz0UcfVZ6fczrGrbfemi5duqRJkybZfffdM23atAwfPjwdO3ZMq1atMnjw4NTW1i7yun6Xv0cAAJZgwL///vuZMmVK6tevnyT5+OOPk3x2OOY222yTU089tXJ/92/yOnvTp0/Puuuum1tvvTXPPPNMDjjggPz0pz/Nww8/XGe+4cOHp379+rn//vtzySWX5LXXXsvmm2+eRo0a5a677sq//vWvDBgwoPI//lOnTs3Pfvaz3HvvvXnooYey6qqrplevXnPtBTv55JOz55575qmnnkqvXr3Sr1+/vPfee0k+O12gQ4cOuf766zNu3LiccMIJOf7443P99dfXWcaYMWPy4osvZsyYMRk+fHiGDRuWYcOGVZ4/6aSTFniY8MSJEzN58uRst912lWk1NTXZYost8sADD3yVj/Vrmzx5ckaOHJl69eqlXr16i3XZtbW1GT58eJJknXXWqUzv379/7r///lx77bV56qmnsscee2SHHXbIhAkT5lrGpEmTstlmm2X11VfPyJEj06hRo7nmefrpp7P99ttn1113zVNPPZXrrrsu9913XwYNGlRnvnPOOSfrrbdeHn/88QwcODAHHXRQnn/++SSf/V5stdVWadasWe65557cd999adasWXbYYYc6R4LYBr6a1157Lb169cr666+fJ598Mn/84x9z+eWX57TTTqsz35zf/4cffji///3vc+655+ayyy6b73Krq6vz+9//Ps8880yGDx+eu+66K0cffXSdeT7++OP8/ve/z7XXXpu///3vufvuu7Prrrtm9OjRGT16dK688spceumlufHGGyuv8T0CAHzPFf9F77zzTvHWW28VRVEUtbW1RdeuXYs+ffpUnp8+fXrlv7t3714MGDDgK7/Xz372s6JevXpF06ZN6/w0atSoSFJMmTJlvq/t1atXccQRR1Qeb7HFFkW3bt3qzHPccccVnTp1Kj799NNFGs+sWbOK5s2bF7fccktlWpLiV7/6VeXxRx99VFRVVRV/+9vf5rucgQMHFrvttlud9VxppZWKWbNmVabtscceRd++fSuP//CHPxQ9e/ac7zLvv//+Iknx2muv1Zn+v//7v8V2220339edeOKJRXV19Vyf8f7771+ZZ6WVVirOPffcuV577rnnFiuttNI8l9W4ceMiSZGkOOSQQ+b7/nMkKSZOnDjf54cOHVokqYyvurq6qKmpKYYOHVqZ54UXXiiqqqrm+gy23nrr4rjjjqssp2XLlsX48eOLFVdcsRg8eHAxe/bsyrxjxoyps2399Kc/LQ444IA6y7v33nuL6urq4pNPPql8Pvvss0/l+dmzZxfLLrts8cc//rEoiqK4/PLLiy5dutR5nxkzZhSNGzcubrvttqIobANFsfBtYI6JEycWSYrHH3+8KIqiOP744+f6fC+88MKiWbNmRW1tbVEUn/3+r7HGGnXmOeaYY4o11lhjoes4x/XXX1+0adOm8njONvnCCy9Uph144IFFkyZNiqlTp1ambb/99sWBBx5Yefxd/x4BAFiw+v+tPxQ8++yz6dOnT84666zssssuqa6uzpAhQzJo0KAccsgh+f3vf5+ampp8+umnadiwYdZbb7188MEHX+s9t9pqq/zxj3+sM+3hhx/OPvvsU3lcW1ubIUOG5Lrrrstrr72WGTNmZMaMGWnatGmd16233np1Hj/xxBPZbLPNKvep/6K33norJ5xwQu666668+eabqa2tzccff5z//Oc/deZba621Kv/dtGnTNG/ePG+99VZl2sUXX5zLLrssr7zySj755JN8+umnc115v2vXrnX2bLVr1y5PP/105fGcw38X5vPXGkg+O/Lhi9O+qEuXLnUO+0+ywIsLLsqyZsyYkVGjRuWGG27Ib37zm6+0rC9q3rx55RSGjz/+OP/4xz9y4IEHpk2bNtlpp53y2GOPpSiKrLbaanVeN2PGjLRp06by+JNPPsmmm26avfbaa67TGb7oX//6V1544YVcffXVlWlFUWT27NmZOHFi1lhjjSR1t4E5h/rP2QbmLOOLn+n06dMrp2sktoGv6rnnnkuPHj3qrOMmm2ySjz76KJMmTcqKK66YJNloo43qzNOjR4+cc845qa2tnede5TFjxuT000/PuHHj8uGHH2bWrFmZPn16pk2bVvm3pUmTJuncuXPlNcstt1w6duyYZs2a1Zn2+X8PfI8AAN9v/5WAf/LJJ7P55ptnxowZOfPMM7PVVltlqaWWymabbZbBgwfn0ksvzQEHHJBLL700DRs2TPJZZDVu3Di1tbWprq5e6P98zkvTpk2zyiqr1Jk257D8Oc4555yce+65Oe+88yrnrB522GFzXajui0HfuHHjBb73fvvtl7fffjvnnXdeVlpppdTU1KRHjx5zLfeLfwCoqqrK7NmzkyTXX399fvGLX+Scc85Jjx490rx585x11llzHd6/oGUsirZt2yb57FDXdu3aVaa/9dZbWW655Rb42oYNG871GX9eixYt5vmHmPfffz8tW7ac77K6du2aCRMm5KCDDsqVV165yOsyP9XV1XXGudZaa+X222/PGWeckZ122imzZ89OvXr18q9//WuuIPt8UNXU1GSbbbbJX//61xx11FHp0KHDfN9z9uzZOfDAA3PIIYfM9dycMEwW/P3Nnj076667bp0/Aswx53zuhS1jUXwftoF5mVfYFv//KTtf5d+cJHnllVfSq1ev/PznP8+pp56a1q1b57777sv+++9f57oE8/rOfI8AACzIN34O/JNPPpkePXrk4IMPzo033pi33nqrckujli1bpn///jnssMMyevTodO/ePQcccED69euXm2++OUcddVTq1av3lf9HelHce++96dOnT/bZZ5+svfbaWXnlled5zvMXrbXWWrn33nvne6Gwe++9N4ccckh69eqVrl27pqamJu+8886XHtvGG2+cgQMHpnv37llllVXq7HVdXDp16pS2bdvmjjvuqEz79NNP889//jMbb7zx11r26quvPs+rfD/66KPp0qXLAl/761//OiNGjJjr4n+LS7169fLJJ58kSbp3757a2tq89dZbWWWVVer8zImi5LM/BFx55ZVZd91107Nnz8rFGOdlnXXWybPPPjvX8lZZZZXKH6oWZp111smECROy7LLLzrWML0bT1/F93QZ+8IMf5IEHHqhznY0HHnggzZs3z/LLL1+Z9tBDD9V53ZzrWsxr7/vYsWMza9asnHPOOdloo42y2mqrLXA7WZy+r98jAMD3xTca8P/617+y3nrr5fDDD8/pp5+e3r17p1GjRnXuJdy6devsv//+ueeee9K9e/dMmTIlDRs2zMMPP5yuXbt+k8NLkqyyyiq544478sADD+S5557LgQcemMmTJy/0dYMGDcqHH36Yn/zkJxk7dmwmTJiQK6+8snJbslVWWSVXXnllnnvuuTz88MPp16/fQvfaz2tsY8eOzW233ZZ///vf+fWvf/2Vbnl1wQUXZOutt57v81VVVTnssMNy+umn589//nOeeeaZ7LfffmnSpEn23nvvBS571qxZmTx5cp2fN998s/L84Ycfnr/97W855ZRTMm7cuIwbNy6nnnpq/v73v+eII45Y4LJXXnnl9OnTJyeccMKXW+F5KIqiMr6JEyfm0ksvzW233ZY+ffokSVZbbbX069cv++67b0aOHJmJEyfm0UcfzRlnnJHRo0fXWVa9evVy9dVXZ+21107Pnj3nu70cc8wxefDBB3PwwQfniSeeyIQJE/KXv/wlgwcPXuRx9+vXL0svvXT69OmTe++9NxMnTsw///nPHHrooXMdTbIgtoF5GzhwYF599dUMHjw4zz//fEaNGpUTTzwxhx9+eJ07YLz66qs5/PDDM378+IwYMSJ/+MMfcuihh85zmZ07d86sWbPyhz/8IS+99FKuvPLKXHzxxYtlvL5HAIDvt2/0EPqbbropgwcPzmmnnVY5V/T444/Pr3/969x7773ZbLPNUhRFGjZsmJVXXrly//f5nVf6Tfj1r3+diRMnZvvtt0+TJk1ywAEHZOedd17o+fdt2rTJXXfdlaOOOipbbLFF6tWrl27dumWTTTZJklxxxRU54IAD0r1796y44oo5/fTTc+SRR36psf385z/PE088kb59+6aqqip77bVXBg4cmL/97W9fajnvvPPOQvfcH3300fnkk08ycODATJkyJRtuuGFuv/32hZ4D++yzz9Y5VDf57DDzObdV22ijjXLbbbfllFNOqfzhpmvXrrntttuy4YYbLnTsRxxxRDbZZJM8/PDDizT//Hz44YeVcdbU1GSllVbKKaeckmOOOaYyz9ChQ3PaaafliCOOyGuvvZY2bdqkR48e6dWr11zLq1+/fkaMGJG+ffumZ8+e87zd3FprrZV//vOf+eUvf1nZ1jt37py+ffsu8ribNGmSe+65J8ccc0x23XXXTJ06Ncsvv3y23nrrtGjRYpGXYxuYt+WXXz6jR4/OUUcdlbXXXrvyB8Vf/epXdebbd99988knn2SDDTZIvXr1Mnjw4BxwwAHzXGa3bt3yu9/9LmeccUaOO+64bL755vntb3+bfffd92uP1/cIAPD9VlUU39w92uYV4hMmTMiWW26ZgQMH5pe//GXlHNTPn4u6KBdcgjmqqqoyceLEBd5ei++2b3Ib2HLLLdOtW7c6Rw4BAMCS8I0eQj8n3j9/EaZVV101gwYNyvnnn5/nn3++EuqfD3bxDgAAAHUt1oAfP358jjvuuOy77745++yz88QTT3z2JtXVdSJ+6623ztJLL5377rsvyWd76gEAAID5W2wBP27cuGy00UZ58cUX07Rp05x77rnp379/5eJN1dXVlVDfYIMNsu6661buC/zfOt+d76YTTzwxSy211JIeBkvQN7kN3H333Q6fBwDgW2GxnAP/0UcfZffdd8/aa6+dM844I8lnV21ea6210qhRowwePDjHH398ks+udFy/fv3cfffdGTx4cG6//fa5LpwEAAAA1LVY9sBXV1fnvffeS7du3ZIkH3/8cVZYYYVss8026dq1a/76179Wrpxev/5nF75fd911c+edd4p3AAAAWARfO+CLoshHH32U1157La+99lqSz259NWnSpIwbNy777rtvPvroo4wcObLOa5o3b55ll1326749AAAAfC985fvAz7lFXFVVVZZddtkcf/zxGTx4cJ577rm0b98+559/fn7yk59k3333TZMmTXLUUUfl3XffTatWrVJd/Y1e/B4AAAC+c75SSf/73//OeeedlzfeeKMy7aCDDsrQoUPzzDPPZOzYsfnVr36VSy+9NEkyefLktGrVKq1btxbvAAAA8BV86T3wL7zwQnr06JEpU6bk3XffzeGHH56ll1461dXV+dnPfpa+ffumqqoqNTU1ldeMHz8+nTt3zowZM1JTU+M+7wAAAPAlfamAnzZtWn7729/mxz/+cdZbb70MHjw4s2bNytFHH52ll146SeoE+vPPP59LLrkkw4cPz/33359GjRot/jUAAACA74EvFfDV1dVZd91106ZNm/Tt2zfLLLNMfvKTnyRJJeLnxPvUqVNzxx135PHHH88999yTNddcc/GPHgAAAL4nvvR94KdNm5amTZtWHl933XXZa6+9csQRR+TYY49NmzZtUltbm3fffTetW7fO1KlT06pVq8U+cAAAAPg++dLnwM+J99ra2lRXV6dv374piiJ77713qqqqcthhh+Xss8/OxIkTc80114h3AAAAWAy+9B74zyuKIkVRpLq6Otddd11++tOfZuWVV86LL76YRx55JN27d1+cYwUAAIDvra8V8MlnEZ8kVVVV2XrrrfPEE0/k7rvvds47AAAALEZf+hD6L6qqqkptbW2OOuqojBkzJk888YR4BwAAgMWsenEtqGvXrnnsscey1lprLa5FAgAAAP+/r30I/RxFUVRuIQcAAAAsXottD7x4BwAAgG/OYgt4AAAA4Jsj4AEAAKAEBDwAAACUgIAHAACAEhDwAAAAUAICHgAAAEpAwAMAAEAJCHgAAAAoAQEPAAAAJfD/AeNh0PU3fa1pAAAAAElFTkSuQmCC",
-      "text/plain": [
-       "<Figure size 1000x600 with 1 Axes>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    }
-   ],
-   "source": [
-    "import pandas as pd\n",
-    "import os\n",
-    "from pathlib import Path\n",
-    "import tkinter as tk\n",
-    "from tkinter import ttk, messagebox, filedialog\n",
-    "from tkcalendar import Calendar\n",
-    "from datetime import datetime\n",
-    "import matplotlib.pyplot as plt\n",
-    "from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg\n",
-    "import matplotlib.dates as mdates\n",
-    "from matplotlib.figure import Figure\n",
-    "import ttkbootstrap as ttk\n",
-    "from ttkbootstrap.constants import *\n",
-    "from ttkbootstrap.tooltip import ToolTip\n",
-    "import re\n",
-    "\n",
-    "class FarmTaskTracker:\n",
-    "    \"\"\"A class to manage farm task tracking with a GUI interface.\"\"\"\n",
-    "    \n",
-    "    def __init__(self):\n",
-    "        # Set default directory for Excel file (user's home directory)\n",
-    "        self.data_dir = Path.home() / \"FarmTasks\"\n",
-    "        self.data_dir.mkdir(exist_ok=True)\n",
-    "        self.excel_file = self.data_dir / \"farm_tasks.xlsx\"\n",
-    "        self.selected_task_id = None\n",
-    "        self.root = None\n",
-    "        self.setup_excel_file()\n",
-    "        self.setup_gui()\n",
-    "\n",
-    "    def setup_excel_file(self):\n",
-    "        \"\"\"Create the Excel file if it doesn't exist.\"\"\"\n",
-    "        try:\n",
-    "            if not self.excel_file.exists():\n",
-    "                df = pd.DataFrame(columns=[\n",
-    "                    \"ID\", \"Job Name\", \"Description\", \"Start Date\", \"End Date\",\n",
-    "                    \"Estimated Cost\", \"Actual Cost\", \"Status\"\n",
-    "                ])\n",
-    "                df.to_excel(self.excel_file, index=False)\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"Excel dosyası oluşturulamadı: {e}\")\n",
-    "\n",
-    "    def load_tasks(self):\n",
-    "        \"\"\"Load tasks from the Excel file.\"\"\"\n",
-    "        try:\n",
-    "            return pd.read_excel(self.excel_file)\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"Excel dosyası yüklenemedi: {e}\")\n",
-    "            return pd.DataFrame()\n",
-    "\n",
-    "    def validate_date(self, date_str):\n",
-    "        \"\"\"Validate date format (YYYY-MM-DD).\"\"\"\n",
-    "        try:\n",
-    "            datetime.strptime(date_str, '%Y-%m-%d')\n",
-    "            return True\n",
-    "        except ValueError:\n",
-    "            return False\n",
-    "\n",
-    "    def validate_cost(self, cost_str):\n",
-    "        \"\"\"Validate cost input (numeric and non-negative).\"\"\"\n",
-    "        try:\n",
-    "            return float(cost_str) >= 0\n",
-    "        except (ValueError, TypeError):\n",
-    "            return False\n",
-    "\n",
-    "    def add_task(self):\n",
-    "        \"\"\"Add a new task to the Excel file.\"\"\"\n",
-    "        try:\n",
-    "            name = self.entry_name.get().strip()\n",
-    "            desc = self.entry_desc.get().strip()\n",
-    "            start_date = self.entry_start.get().strip()\n",
-    "            end_date = self.entry_end.get().strip()\n",
-    "            estimated_cost = self.entry_estimated.get().strip()\n",
-    "            actual_cost = self.entry_actual.get().strip()\n",
-    "            status = \"Done\" if self.check_status.get() else \"Waiting\"\n",
-    "\n",
-    "            # Input validation\n",
-    "            if not name:\n",
-    "                messagebox.showerror(\"Hata\", \"Görev adı boş olamaz!\")\n",
-    "                return\n",
-    "            if not (self.validate_date(start_date) and self.validate_date(end_date)):\n",
-    "                messagebox.showerror(\"Hata\", \"Tarih formatı YYYY-MM-DD olmalı!\")\n",
-    "                return\n",
-    "            if not self.validate_cost(estimated_cost):\n",
-    "                messagebox.showerror(\"Hata\", \"Tahmini maliyet geçerli bir sayı olmalı!\")\n",
-    "                return\n",
-    "            if status == \"Done\" and not self.validate_cost(actual_cost):\n",
-    "                messagebox.showerror(\"Hata\", \"Gerçekleşen maliyet geçerli bir sayı olmalı!\")\n",
-    "                return\n",
-    "\n",
-    "            estimated_cost = float(estimated_cost)\n",
-    "            actual_cost = float(actual_cost) if status == \"Done\" else 0\n",
-    "\n",
-    "            df = self.load_tasks()\n",
-    "            new_id = len(df) + 1\n",
-    "            new_task = pd.DataFrame([[new_id, name, desc, start_date, end_date,\n",
-    "                                    estimated_cost, actual_cost, status]], columns=df.columns)\n",
-    "            df = pd.concat([df, new_task], ignore_index=True)\n",
-    "            df.to_excel(self.excel_file, index=False)\n",
-    "            messagebox.showinfo(\"Başarılı\", \"Görev başarıyla eklendi!\")\n",
-    "            self.clear_entries()\n",
-    "            self.show_tasks()\n",
-    "            self.status_label.configure(text=\"Görev eklendi.\")\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"Bir hata oluştu: {e}\")\n",
-    "\n",
-    "    def clear_entries(self):\n",
-    "        \"\"\"Clear all input fields.\"\"\"\n",
-    "        self.entry_name.delete(0, tk.END)\n",
-    "        self.entry_desc.delete(0, tk.END)\n",
-    "        self.entry_start.delete(0, tk.END)\n",
-    "        self.entry_end.delete(0, tk.END)\n",
-    "        self.entry_estimated.delete(0, tk.END)\n",
-    "        self.entry_actual.delete(0, tk.END)\n",
-    "        self.check_status.set(0)\n",
-    "\n",
-    "    def load_selected_task(self):\n",
-    "        \"\"\"Load selected task into input fields.\"\"\"\n",
-    "        selected = self.table.selection()\n",
-    "        if not selected:\n",
-    "            messagebox.showwarning(\"Uyarı\", \"Lütfen düzenlemek için bir görev seçin.\")\n",
-    "            return\n",
-    "\n",
-    "        values = self.table.item(selected, \"values\")\n",
-    "        self.selected_task_id = int(values[0])\n",
-    "\n",
-    "        self.clear_entries()\n",
-    "        self.entry_name.insert(0, values[1])\n",
-    "        self.entry_desc.insert(0, values[2])\n",
-    "        self.entry_start.insert(0, values[3])\n",
-    "        self.entry_end.insert(0, values[4])\n",
-    "        self.entry_estimated.insert(0, values[5])\n",
-    "        self.entry_actual.insert(0, values[6])\n",
-    "        self.check_status.set(1 if values[7] == \"Done\" else 0)\n",
-    "        self.status_label.configure(text=\"Görev düzenlenmek için yüklendi.\")\n",
-    "\n",
-    "    def update_task(self):\n",
-    "        \"\"\"Update the selected task.\"\"\"\n",
-    "        if self.selected_task_id is None:\n",
-    "            messagebox.showerror(\"Hata\", \"Güncelleme için görev seçilmedi.\")\n",
-    "            return\n",
-    "        try:\n",
-    "            df = self.load_tasks()\n",
-    "            idx = df[df[\"ID\"] == self.selected_task_id].index[0]\n",
-    "\n",
-    "            name = self.entry_name.get().strip()\n",
-    "            desc = self.entry_desc.get().strip()\n",
-    "            start_date = self.entry_start.get().strip()\n",
-    "            end_date = self.entry_end.get().strip()\n",
-    "            estimated_cost = self.entry_estimated.get().strip()\n",
-    "            actual_cost = self.entry_actual.get().strip()\n",
-    "            status = \"Done\" if self.check_status.get() else \"Waiting\"\n",
-    "\n",
-    "            # Input validation\n",
-    "            if not name:\n",
-    "                messagebox.showerror(\"Hata\", \"Görev adı boş olamaz!\")\n",
-    "                return\n",
-    "            if not (self.validate_date(start_date) and self.validate_date(end_date)):\n",
-    "                messagebox.showerror(\"Hata\", \"Tarih formatı YYYY-MM-DD olmalı!\")\n",
-    "                return\n",
-    "            if not self.validate_cost(estimated_cost):\n",
-    "                messagebox.showerror(\"Hata\", \"Tahmini maliyet geçerli bir sayı olmalı!\")\n",
-    "                return\n",
-    "            if status == \"Done\" and not self.validate_cost(actual_cost):\n",
-    "                messagebox.showerror(\"Hata\", \"Gerçekleşen maliyet geçerli bir sayı olmalı!\")\n",
-    "                return\n",
-    "\n",
-    "            df.at[idx, \"Job Name\"] = name\n",
-    "            df.at[idx, \"Description\"] = desc\n",
-    "            df.at[idx, \"Start Date\"] = start_date\n",
-    "            df.at[idx, \"End Date\"] = end_date\n",
-    "            df.at[idx, \"Estimated Cost\"] = float(estimated_cost)\n",
-    "            df.at[idx, \"Actual Cost\"] = float(actual_cost) if status == \"Done\" else 0\n",
-    "            df.at[idx, \"Status\"] = status\n",
-    "\n",
-    "            df.to_excel(self.excel_file, index=False)\n",
-    "            messagebox.showinfo(\"Başarılı\", \"Görev başarıyla güncellendi.\")\n",
-    "            self.selected_task_id = None\n",
-    "            self.clear_entries()\n",
-    "            self.show_tasks()\n",
-    "            self.status_label.configure(text=\"Görev güncellendi.\")\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"Güncelleme başarısız: {e}\")\n",
-    "\n",
-    "    def delete_task(self):\n",
-    "        \"\"\"Delete the selected task.\"\"\"\n",
-    "        try:\n",
-    "            selected_item = self.table.selection()\n",
-    "            if not selected_item:\n",
-    "                messagebox.showerror(\"Hata\", \"Lütfen silmek için bir görev seçin!\")\n",
-    "                return\n",
-    "\n",
-    "            result = messagebox.askyesno(\"Onay\", \"Bu görevi silmek istediğinizden emin misiniz?\")\n",
-    "            if not result:\n",
-    "                return\n",
-    "\n",
-    "            df = self.load_tasks()\n",
-    "            selected_id = int(self.table.item(selected_item, \"values\")[0])\n",
-    "            df = df[df[\"ID\"] != selected_id]\n",
-    "            df[\"ID\"] = range(1, len(df) + 1)\n",
-    "            df.to_excel(self.excel_file, index=False)\n",
-    "            messagebox.showinfo(\"Başarılı\", \"Görev başarıyla silindi!\")\n",
-    "            self.clear_entries()\n",
-    "            self.show_tasks()\n",
-    "            self.status_label.configure(text=\"Görev silindi.\")\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"Bir hata oluştu: {e}\")\n",
-    "\n",
-    "    def show_tasks(self, filter_status=None):\n",
-    "        \"\"\"Display tasks in the table, optionally filtered by status.\"\"\"\n",
-    "        try:\n",
-    "            df = self.load_tasks()\n",
-    "            if filter_status:\n",
-    "                df = df[df[\"Status\"] == filter_status]\n",
-    "            self.table.delete(*self.table.get_children())\n",
-    "            for _, row in df.iterrows():\n",
-    "                self.table.insert(\"\", \"end\", values=row.tolist())\n",
-    "            self.status_label.configure(text=f\"{len(df)} görev görüntülendi.\")\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"Görevler yüklenemedi: {e}\")\n",
-    "\n",
-    "    def show_calendar(self, filtered_df=None, save_as_pdf=False):\n",
-    "        \"\"\"Display a calendar view of tasks.\"\"\"\n",
-    "        try:\n",
-    "            df = filtered_df if filtered_df is not None else self.load_tasks()\n",
-    "            df = df.copy()\n",
-    "            df[\"Start Date\"] = pd.to_datetime(df[\"Start Date\"], errors=\"coerce\")\n",
-    "            df[\"End Date\"] = pd.to_datetime(df[\"End Date\"], errors=\"coerce\")\n",
-    "            df = df.dropna(subset=[\"Start Date\", \"End Date\"])\n",
-    "\n",
-    "            grouped = df.groupby(\"Job Name\")\n",
-    "            collapsed_tasks = []\n",
-    "\n",
-    "            for name, group in grouped:\n",
-    "                start = group[\"Start Date\"].min()\n",
-    "                end = group[\"End Date\"].max()\n",
-    "                desc = \" / \".join(group[\"Description\"].dropna().astype(str).unique())\n",
-    "                collapsed_tasks.append({\n",
-    "                    \"Job Name\": name,\n",
-    "                    \"Start Date\": start,\n",
-    "                    \"End Date\": end,\n",
-    "                    \"Descriptions\": desc,\n",
-    "                    \"Details\": group\n",
-    "                })\n",
-    "\n",
-    "            collapsed_tasks.sort(key=lambda x: x[\"Start Date\"])\n",
-    "            fig, ax = plt.subplots(figsize=(14, max(6, len(collapsed_tasks) * 0.5)))\n",
-    "\n",
-    "            total_actual = 0\n",
-    "            total_estimated = 0\n",
-    "\n",
-    "            for idx, task in enumerate(collapsed_tasks):\n",
-    "                start = task[\"Start Date\"]\n",
-    "                end = task[\"End Date\"]\n",
-    "                duration = (end - start).days or 1\n",
-    "\n",
-    "                done_cost = task[\"Details\"].loc[task[\"Details\"][\"Status\"] == \"Done\", \"Actual Cost\"].sum()\n",
-    "                wait_cost = task[\"Details\"].loc[task[\"Details\"][\"Status\"] == \"Waiting\", \"Estimated Cost\"].sum()\n",
-    "                total_cost = done_cost + wait_cost\n",
-    "\n",
-    "                done_ratio = done_cost / total_cost if total_cost else 0\n",
-    "                wait_ratio = wait_cost / total_cost if total_cost else 0\n",
-    "\n",
-    "                done_days = int(duration * done_ratio)\n",
-    "                wait_days = int(duration * wait_ratio)\n",
-    "\n",
-    "                done_end = start + pd.Timedelta(days=done_days)\n",
-    "                wait_end = done_end + pd.Timedelta(days=wait_days)\n",
-    "\n",
-    "                if done_cost > 0:\n",
-    "                    ax.plot([start, done_end], [idx, idx], color=\"green\", linewidth=4)\n",
-    "                    ax.text(done_end, idx + 0.1, f\"Harcanan: {done_cost:,.0f} EUR\".replace(\",\", \".\"), fontsize=8, va=\"bottom\")\n",
-    "                    total_actual += done_cost\n",
-    "\n",
-    "                if wait_cost > 0:\n",
-    "                    ax.plot([done_end, wait_end], [idx, idx], color=\"orange\", linewidth=4)\n",
-    "                    ax.text(wait_end, idx + 0.1, f\"Beklenen: {wait_cost:,.0f} EUR\".replace(\",\", \".\"), fontsize=8, va=\"bottom\")\n",
-    "                    total_estimated += wait_cost\n",
-    "\n",
-    "            ax.set_yticks(range(len(collapsed_tasks)))\n",
-    "            ax.set_yticklabels([t[\"Job Name\"] for t in collapsed_tasks], fontsize=9)\n",
-    "            ax.set_title(\"Görev Zaman Çizelgesi ve Maliyet\", fontsize=12, pad=10)\n",
-    "            ax.grid(True, linestyle=\"--\", linewidth=0.5)\n",
-    "            ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))\n",
-    "            ax.xaxis.set_major_locator(mdates.MonthLocator())\n",
-    "            plt.xticks(rotation=45)\n",
-    "            plt.tight_layout()\n",
-    "\n",
-    "            ax.text(\n",
-    "                0.01, -0.12,\n",
-    "                f\"Harcanan: {total_actual:,.0f} EUR | Beklenen: {total_estimated:,.0f} EUR | Toplam: {(total_actual + total_estimated):,.0f} EUR\".replace(\",\", \".\"),\n",
-    "                transform=ax.transAxes,\n",
-    "                fontsize=10,\n",
-    "                color='black',\n",
-    "                ha='left'\n",
-    "            )\n",
-    "\n",
-    "            if save_as_pdf:\n",
-    "                file_path = filedialog.asksaveasfilename(defaultextension=\".pdf\", filetypes=[(\"PDF files\", \"*.pdf\")])\n",
-    "                if file_path:\n",
-    "                    fig.savefig(file_path, format=\"pdf\", bbox_inches='tight')\n",
-    "                    messagebox.showinfo(\"Başarılı\", f\"Takvim PDF olarak kaydedildi: {file_path}\")\n",
-    "                    self.status_label.configure(text=\"Takvim PDF olarak kaydedildi.\")\n",
-    "                plt.close(fig)\n",
-    "            else:\n",
-    "                cal_window = ttk.Toplevel(self.root)\n",
-    "                cal_window.title(\"Takvim Görünümü\")\n",
-    "                cal_window.geometry(\"1000x600\")\n",
-    "                canvas = FigureCanvasTkAgg(fig, master=cal_window)\n",
-    "                canvas.draw()\n",
-    "                canvas.get_tk_widget().pack(fill=\"both\", expand=True)\n",
-    "                ttk.Button(cal_window, text=\"PDF Olarak Kaydet\", command=lambda: self.show_calendar(filtered_df, save_as_pdf=True), style=\"primary.TButton\").pack(pady=10)\n",
-    "                self.status_label.configure(text=\"Takvim açıldı.\")\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"Takvim oluşturulurken hata: {e}\")\n",
-    "\n",
-    "    def export_calendar_pdf(self):\n",
-    "        \"\"\"Export calendar as PDF.\"\"\"\n",
-    "        self.show_calendar(save_as_pdf=True)\n",
-    "\n",
-    "    def open_calendar_selection(self):\n",
-    "        \"\"\"Open a window to select date range for expense calculation and calendar display.\"\"\"\n",
-    "        try:\n",
-    "            popup = ttk.Toplevel(self.root)\n",
-    "            popup.title(\"Tarih Aralığı Seç\")\n",
-    "            popup.geometry(\"300x300\")\n",
-    "\n",
-    "            ttk.Label(popup, text=\"Başlangıç Tarihi:\").pack(pady=5)\n",
-    "            cal_start = Calendar(popup, selectmode='day', date_pattern='yyyy-mm-dd')\n",
-    "            cal_start.pack(pady=5)\n",
-    "\n",
-    "            ttk.Label(popup, text=\"Bitiş Tarihi:\").pack(pady=5)\n",
-    "            cal_end = Calendar(popup, selectmode='day', date_pattern='yyyy-mm-dd')\n",
-    "            cal_end.pack(pady=5)\n",
-    "\n",
-    "            def calculate_and_show_calendar():\n",
-    "                try:\n",
-    "                    start = pd.to_datetime(cal_start.get_date())\n",
-    "                    end = pd.to_datetime(cal_end.get_date())\n",
-    "\n",
-    "                    if start > end:\n",
-    "                        messagebox.showerror(\"Hata\", \"Başlangıç tarihi bitiş tarihinden sonra olamaz!\")\n",
-    "                        return\n",
-    "\n",
-    "                    df = self.load_tasks()\n",
-    "                    df[\"Start Date\"] = pd.to_datetime(df[\"Start Date\"], errors=\"coerce\")\n",
-    "                    df[\"End Date\"] = pd.to_datetime(df[\"End Date\"], errors=\"coerce\")\n",
-    "\n",
-    "                    mask = (df[\"Start Date\"] >= start) & (df[\"End Date\"] <= end)\n",
-    "                    filtered = df.loc[mask].copy()\n",
-    "\n",
-    "                    if filtered.empty:\n",
-    "                        messagebox.showinfo(\"Bilgi\", \"Belirtilen tarihler arasında görev bulunamadı.\")\n",
-    "                        return\n",
-    "\n",
-    "                    total_actual = filtered.loc[filtered[\"Status\"] == \"Done\", \"Actual Cost\"].sum()\n",
-    "                    total_estimated = filtered.loc[filtered[\"Status\"] == \"Waiting\", \"Estimated Cost\"].sum()\n",
-    "\n",
-    "                    result_text = f\"Toplam Gerçekleşen Maliyet: {total_actual:,.2f} EUR\\nToplam Tahmini Maliyet: {total_estimated:,.2f} EUR\"\n",
-    "                    messagebox.showinfo(\"Harcamalar\", result_text)\n",
-    "                    self.show_calendar(filtered_df=filtered)\n",
-    "                    self.status_label.configure(text=\"Harcama hesaplandı ve takvim gösterildi.\")\n",
-    "                except Exception as e:\n",
-    "                    messagebox.showerror(\"Hata\", f\"Bir hata oluştu: {e}\")\n",
-    "\n",
-    "            ttk.Button(popup, text=\"Hesapla ve Göster\", command=calculate_and_show_calendar, style=\"primary.TButton\").pack(pady=10)\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"Tarih seçimi penceresi açılırken hata: {e}\")\n",
-    "\n",
-    "    def export_all_tasks(self):\n",
-    "        \"\"\"Export all tasks to a new Excel file.\"\"\"\n",
-    "        try:\n",
-    "            df = self.load_tasks()\n",
-    "            if df.empty:\n",
-    "                messagebox.showinfo(\"Bilgi\", \"Aktarılacak görev bulunamadı.\")\n",
-    "                return\n",
-    "\n",
-    "            file_path = filedialog.asksaveasfilename(\n",
-    "                defaultextension=\".xlsx\",\n",
-    "                filetypes=[(\"Excel files\", \"*.xlsx\"), (\"All files\", \"*.*\")]\n",
-    "            )\n",
-    "\n",
-    "            if not file_path:\n",
-    "                return\n",
-    "\n",
-    "            now = datetime.now().strftime(\"%Y-%m-%d\")\n",
-    "            writer = pd.ExcelWriter(file_path, engine='openpyxl')\n",
-    "\n",
-    "            df.to_excel(writer, index=False, sheet_name='Tüm Görevler')\n",
-    "\n",
-    "            summary = pd.DataFrame({\n",
-    "                'Toplam Görev Sayısı': [len(df)],\n",
-    "                'Tamamlanan Görev Sayısı': [len(df[df['Status'] == 'Done'])],\n",
-    "                'Bekleyen Görev Sayısı': [len(df[df['Status'] == 'Waiting'])],\n",
-    "                'Toplam Gerçekleşen Maliyet': [df[df['Status'] == 'Done']['Actual Cost'].sum()],\n",
-    "                'Toplam Beklenen Maliyet': [df[df['Status'] == 'Waiting']['Estimated Cost'].sum()],\n",
-    "                'Rapor Tarihi': [now]\n",
-    "            })\n",
-    "\n",
-    "            summary.to_excel(writer, index=False, sheet_name='Özet')\n",
-    "            writer.close()\n",
-    "            messagebox.showinfo(\"Başarılı\", f\"Tüm görevler dışa aktarıldı: {file_path}\")\n",
-    "            self.status_label.configure(text=\"Görevler Excel'e aktarıldı.\")\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"Dışa aktarma sırasında hata: {e}\")\n",
-    "\n",
-    "    def show_statistics(self):\n",
-    "        \"\"\"Display task statistics.\"\"\"\n",
-    "        try:\n",
-    "            df = self.load_tasks()\n",
-    "            if df.empty:\n",
-    "                messagebox.showinfo(\"Bilgi\", \"İstatistik gösterilecek görev bulunamadı.\")\n",
-    "                return\n",
-    "\n",
-    "            df[\"Start Date\"] = pd.to_datetime(df[\"Start Date\"], errors=\"coerce\")\n",
-    "            df[\"End Date\"] = pd.to_datetime(df[\"End Date\"], errors=\"coerce\")\n",
-    "\n",
-    "            stats_window = ttk.Toplevel(self.root)\n",
-    "            stats_window.title(\"Görev İstatistikleri\")\n",
-    "            stats_window.geometry(\"800x600\")\n",
-    "\n",
-    "            total_tasks = len(df)\n",
-    "            done_tasks = len(df[df[\"Status\"] == \"Done\"])\n",
-    "            waiting_tasks = len(df[df[\"Status\"] == \"Waiting\"])\n",
-    "            total_actual_cost = df[df[\"Status\"] == \"Done\"][\"Actual Cost\"].sum()\n",
-    "            total_estimated_cost = df[df[\"Status\"] == \"Waiting\"][\"Estimated Cost\"].sum()\n",
-    "            df[\"Duration\"] = (df[\"End Date\"] - df[\"Start Date\"]).dt.days\n",
-    "            avg_duration = df[\"Duration\"].mean()\n",
-    "\n",
-    "            info_frame = ttk.Frame(stats_window)\n",
-    "            info_frame.pack(pady=10, fill=\"x\")\n",
-    "            ttk.Label(info_frame, text=f\"Toplam Görev Sayısı: {total_tasks}\", font=(\"Arial\", 12)).pack(anchor=\"w\", pady=2)\n",
-    "            ttk.Label(info_frame, text=f\"Tamamlanan Görev Sayısı: {done_tasks}\", font=(\"Arial\", 12)).pack(anchor=\"w\", pady=2)\n",
-    "            ttk.Label(info_frame, text=f\"Bekleyen Görev Sayısı: {waiting_tasks}\", font=(\"Arial\", 12)).pack(anchor=\"w\", pady=2)\n",
-    "            ttk.Label(info_frame, text=f\"Toplam Gerçekleşen Maliyet: {total_actual_cost:,.2f} EUR\", font=(\"Arial\", 12)).pack(anchor=\"w\", pady=2)\n",
-    "            ttk.Label(info_frame, text=f\"Toplam Beklenen Maliyet: {total_estimated_cost:,.2f} EUR\", font=(\"Arial\", 12)).pack(anchor=\"w\", pady=2)\n",
-    "            ttk.Label(info_frame, text=f\"Ortalama Görev Süresi: {avg_duration:.1f} gün\", font=(\"Arial\", 12)).pack(anchor=\"w\", pady=2)\n",
-    "\n",
-    "            fig = Figure(figsize=(8, 8))\n",
-    "            ax1 = fig.add_subplot(221)\n",
-    "            status_counts = df[\"Status\"].value_counts()\n",
-    "            ax1.pie(\n",
-    "                status_counts,\n",
-    "                labels=status_counts.index,\n",
-    "                autopct='%1.1f%%',\n",
-    "                colors=['green', 'orange'] if \"Done\" in status_counts.index and \"Waiting\" in status_counts.index else None\n",
-    "            )\n",
-    "            ax1.set_title(\"Görev Durumu Dağılımı\")\n",
-    "\n",
-    "            ax2 = fig.add_subplot(222)\n",
-    "            cost_data = [total_actual_cost, total_estimated_cost]\n",
-    "            ax2.bar(['Gerçekleşen', 'Beklenen'], cost_data, color=['green', 'orange'])\n",
-    "            ax2.set_title(\"Maliyet Karşılaştırma\")\n",
-    "            ax2.set_ylabel(\"EUR\")\n",
-    "\n",
-    "            ax3 = fig.add_subplot(212)\n",
-    "            df['Month'] = df['Start Date'].dt.to_period('M')\n",
-    "            monthly_tasks = df.groupby('Month').size()\n",
-    "            ax3.plot(range(len(monthly_tasks)), monthly_tasks.values, marker='o')\n",
-    "            ax3.set_xticks(range(len(monthly_tasks)))\n",
-    "            ax3.set_xticklabels([str(period) for period in monthly_tasks.index], rotation=45)\n",
-    "            ax3.set_title(\"Aylık Görev Sayısı\")\n",
-    "            ax3.set_ylabel(\"Görev Sayısı\")\n",
-    "            fig.tight_layout()\n",
-    "\n",
-    "            canvas = FigureCanvasTkAgg(fig, master=stats_window)\n",
-    "            canvas.draw()\n",
-    "            canvas.get_tk_widget().pack(fill=\"both\", expand=True)\n",
-    "            self.status_label.configure(text=\"İstatistikler gösterildi.\")\n",
-    "        except Exception as e:\n",
-    "            messagebox.showerror(\"Hata\", f\"İstatistikler oluşturulurken hata: {e}\")\n",
-    "\n",
-    "    def select_date(self, entry_widget):\n",
-    "        \"\"\"Show a date picker and set the selected date in the entry field.\"\"\"\n",
-    "        def set_date():\n",
-    "            selected_date = cal.get_date()\n",
-    "            entry_widget.delete(0, tk.END)\n",
-    "            entry_widget.insert(0, selected_date)\n",
-    "            date_popup.destroy()\n",
-    "\n",
-    "        date_popup = ttk.Toplevel(self.root)\n",
-    "        date_popup.title(\"Tarih Seç\")\n",
-    "        date_popup.geometry(\"300x250\")\n",
-    "        cal = Calendar(date_popup, selectmode='day', date_pattern='yyyy-mm-dd')\n",
-    "        cal.pack(pady=10)\n",
-    "        ttk.Button(date_popup, text=\"Seç\", command=set_date, style=\"primary.TButton\").pack(pady=5)\n",
-    "\n",
-    "    def setup_gui(self):\n",
-    "        \"\"\"Set up the GUI with ttkbootstrap.\"\"\"\n",
-    "        self.root = ttk.Window(themename=\"flatly\")  # Modern theme\n",
-    "        self.root.title(\"Çiftlik Görev Takip\")\n",
-    "        self.root.geometry(\"1000x800\")\n",
-    "\n",
-    "        # Main frames\n",
-    "        input_frame = ttk.LabelFrame(self.root, text=\"Görev Bilgileri\", padding=10)\n",
-    "        input_frame.pack(fill=\"x\", padx=10, pady=5)\n",
-    "        button_frame = ttk.Frame(self.root)\n",
-    "        button_frame.pack(fill=\"x\", padx=10, pady=5)\n",
-    "        table_frame = ttk.Frame(self.root)\n",
-    "        table_frame.pack(fill=\"both\", expand=True, padx=10, pady=5)\n",
-    "        status_frame = ttk.Frame(self.root)\n",
-    "        status_frame.pack(fill=\"x\", padx=10, pady=5)\n",
-    "\n",
-    "        # Status bar\n",
-    "        self.status_label = ttk.Label(status_frame, text=\"Hazır\", relief=\"sunken\", anchor=\"w\")\n",
-    "        self.status_label.pack(fill=\"x\")\n",
-    "\n",
-    "        # Input fields\n",
-    "        field_width = 40\n",
-    "        row1 = ttk.Frame(input_frame)\n",
-    "        row1.pack(fill=\"x\", padx=5, pady=5)\n",
-    "        ttk.Label(row1, text=\"Görev Adı:\").grid(row=0, column=0, padx=5, pady=2, sticky=\"w\")\n",
-    "        self.entry_name = ttk.Entry(row1, width=field_width)\n",
-    "        self.entry_name.grid(row=0, column=1, padx=5, pady=2, sticky=\"w\")\n",
-    "        ToolTip(self.entry_name, \"Görev adını buraya girin (örn: Elma Hasadı)\")\n",
-    "        ttk.Label(row1, text=\"Açıklama:\").grid(row=0, column=2, padx=5, pady=2, sticky=\"w\")\n",
-    "        self.entry_desc = ttk.Entry(row1, width=field_width)\n",
-    "        self.entry_desc.grid(row=0, column=3, padx=5, pady=2, sticky=\"w\")\n",
-    "        ToolTip(self.entry_desc, \"Görevle ilgili detaylı açıklama\")\n",
-    "\n",
-    "        row2 = ttk.Frame(input_frame)\n",
-    "        row2.pack(fill=\"x\", padx=5, pady=5)\n",
-    "        ttk.Label(row2, text=\"Başlangıç Tarihi:\").grid(row=0, column=0, padx=5, pady=2, sticky=\"w\")\n",
-    "        date_frame1 = ttk.Frame(row2)\n",
-    "        date_frame1.grid(row=0, column=1, padx=5, pady=2, sticky=\"w\")\n",
-    "        self.entry_start = ttk.Entry(date_frame1, width=field_width-5)\n",
-    "        self.entry_start.pack(side=\"left\")\n",
-    "        ttk.Button(date_frame1, text=\"...\", width=3, command=lambda: self.select_date(self.entry_start), style=\"secondary.TButton\").pack(side=\"left\")\n",
-    "        ToolTip(self.entry_start, \"Başlangıç tarihi (YYYY-MM-DD)\")\n",
-    "        ttk.Label(row2, text=\"Bitiş Tarihi:\").grid(row=0, column=2, padx=5, pady=2, sticky=\"w\")\n",
-    "        date_frame2 = ttk.Frame(row2)\n",
-    "        date_frame2.grid(row=0, column=3, padx=5, pady=2, sticky=\"w\")\n",
-    "        self.entry_end = ttk.Entry(date_frame2, width=field_width-5)\n",
-    "        self.entry_end.pack(side=\"left\")\n",
-    "        ttk.Button(date_frame2, text=\"...\", width=3, command=lambda: self.select_date(self.entry_end), style=\"secondary.TButton\").pack(side=\"left\")\n",
-    "        ToolTip(self.entry_end, \"Bitiş tarihi (YYYY-MM-DD)\")\n",
-    "\n",
-    "        row3 = ttk.Frame(input_frame)\n",
-    "        row3.pack(fill=\"x\", padx=5, pady=5)\n",
-    "        ttk.Label(row3, text=\"Tahmini Maliyet (EUR):\").grid(row=0, column=0, padx=5, pady=2, sticky=\"w\")\n",
-    "        self.entry_estimated = ttk.Entry(row3, width=field_width)\n",
-    "        self.entry_estimated.grid(row=0, column=1, padx=5, pady=2, sticky=\"w\")\n",
-    "        ToolTip(self.entry_estimated, \"Tahmini maliyet (sayı, örn: 1000)\")\n",
-    "        self.check_status = tk.BooleanVar()\n",
-    "        status_check = ttk.Checkbutton(row3, text=\"Tamamlandı?\", variable=self.check_status)\n",
-    "        status_check.grid(row=0, column=2, padx=5, pady=2, sticky=\"w\")\n",
-    "        ToolTip(status_check, \"Görevin tamamlanıp tamamlanmadığını işaretleyin\")\n",
-    "        ttk.Label(row3, text=\"Gerçekleşen Maliyet (EUR):\").grid(row=0, column=3, padx=5, pady=2, sticky=\"w\")\n",
-    "        self.entry_actual = ttk.Entry(row3, width=field_width-10)\n",
-    "        self.entry_actual.grid(row=0, column=4, padx=5, pady=2, sticky=\"w\")\n",
-    "        ToolTip(self.entry_actual, \"Gerçekleşen maliyet (tamamlandıysa, örn: 950)\")\n",
-    "\n",
-    "        # Buttons\n",
-    "        button_width = 20\n",
-    "        button_row1 = ttk.Frame(button_frame)\n",
-    "        button_row1.pack(fill=\"x\", padx=5, pady=2)\n",
-    "        ttk.Button(button_row1, text=\"Görev Ekle\", width=button_width, command=self.add_task, style=\"primary.TButton\").pack(side=\"left\", padx=5)\n",
-    "        ttk.Button(button_row1, text=\"Görevi Düzenle\", width=button_width, command=self.load_selected_task, style=\"secondary.TButton\").pack(side=\"left\", padx=5)\n",
-    "        ttk.Button(button_row1, text=\"Görevi Güncelle\", width=button_width, command=self.update_task, style=\"success.TButton\").pack(side=\"left\", padx=5)\n",
-    "        ttk.Button(button_row1, text=\"Görevi Sil\", width=button_width, command=self.delete_task, style=\"danger.TButton\").pack(side=\"left\", padx=5)\n",
-    "\n",
-    "        button_row2 = ttk.Frame(button_frame)\n",
-    "        button_row2.pack(fill=\"x\", padx=5, pady=2)\n",
-    "        ttk.Button(button_row2, text=\"Tüm Görevler\", width=button_width, command=lambda: self.show_tasks(None), style=\"info.TButton\").pack(side=\"left\", padx=5)\n",
-    "        ttk.Button(button_row2, text=\"Tamamlananlar\", width=button_width, command=lambda: self.show_tasks(\"Done\"), style=\"success.TButton\").pack(side=\"left\", padx=5)\n",
-    "        ttk.Button(button_row2, text=\"Bekleyenler\", width=button_width, command=lambda: self.show_tasks(\"Waiting\"), style=\"warning.TButton\").pack(side=\"left\", padx=5)\n",
-    "\n",
-    "        button_row3 = ttk.Frame(button_frame)\n",
-    "        button_row3.pack(fill=\"x\", padx=5, pady=2)\n",
-    "        ttk.Button(button_row3, text=\"Takvimi Aç\", width=button_width, command=self.show_calendar, style=\"primary.TButton\").pack(side=\"left\", padx=5)\n",
-    "        ttk.Button(button_row3, text=\"Takvimi PDF'e Aktar\", width=button_width, command=self.export_calendar_pdf, style=\"secondary.TButton\").pack(side=\"left\", padx=5)\n",
-    "        ttk.Button(button_row3, text=\"Harcama Hesapla\", width=button_width, command=self.open_calendar_selection, style=\"info.TButton\").pack(side=\"left\", padx=5)\n",
-    "        ttk.Button(button_row3, text=\"İstatistikleri Göster\", width=button_width, command=self.show_statistics, style=\"success.TButton\").pack(side=\"left\", padx=5)\n",
-    "\n",
-    "        button_row4 = ttk.Frame(button_frame)\n",
-    "        button_row4.pack(fill=\"x\", padx=5, pady=2)\n",
-    "        ttk.Button(button_row4, text=\"Tüm Görevleri Dışa Aktar\", width=button_width, command=self.export_all_tasks, style=\"primary.TButton\").pack(side=\"left\", padx=5)\n",
-    "        ttk.Button(button_row4, text=\"Temizle\", width=button_width, command=self.clear_entries, style=\"secondary.TButton\").pack(side=\"left\", padx=5)\n",
-    "\n",
-    "        # Table\n",
-    "        columns = (\"ID\", \"Job Name\", \"Description\", \"Start Date\", \"End Date\", \"Estimated Cost\", \"Actual Cost\", \"Status\")\n",
-    "        self.table = ttk.Treeview(table_frame, columns=columns, show=\"headings\", style=\"Treeview\")\n",
-    "        column_widths = {\n",
-    "            \"ID\": 50,\n",
-    "            \"Job Name\": 150,\n",
-    "            \"Description\": 200,\n",
-    "            \"Start Date\": 100,\n",
-    "            \"End Date\": 100,\n",
-    "            \"Estimated Cost\": 100,\n",
-    "            \"Actual Cost\": 100,\n",
-    "            \"Status\": 80\n",
-    "        }\n",
-    "        for col in columns:\n",
-    "            self.table.heading(col, text=col)\n",
-    "            self.table.column(col, width=column_widths[col])\n",
-    "        scrollbar_y = ttk.Scrollbar(table_frame, orient=\"vertical\", command=self.table.yview)\n",
-    "        scrollbar_x = ttk.Scrollbar(table_frame, orient=\"horizontal\", command=self.table.xview)\n",
-    "        self.table.configure(yscrollcommand=scrollbar_y.set, xscrollcommand=scrollbar_x.set)\n",
-    "        scrollbar_y.pack(side=\"right\", fill=\"y\")\n",
-    "        scrollbar_x.pack(side=\"bottom\", fill=\"x\")\n",
-    "        self.table.pack(side=\"left\", fill=\"both\", expand=True)\n",
-    "\n",
-    "        # Show initial tasks\n",
-    "        self.show_tasks()\n",
-    "\n",
-    "    def run(self):\n",
-    "        \"\"\"Start the application.\"\"\"\n",
-    "        self.root.mainloop()\n",
-    "\n",
-    "if __name__ == \"__main__\":\n",
-    "    try:\n",
-    "        import pandas\n",
-    "        import openpyxl\n",
-    "        import tkcalendar\n",
-    "        import matplotlib\n",
-    "    except ImportError as e:\n",
-    "        print(f\"Hata: Gerekli kütüphane eksik: {e}\")\n",
-    "        print(\"Lütfen aşağıdaki komutları çalıştırarak gerekli kütüphaneleri kurun:\")\n",
-    "        print(\"pip install pandas openpyxl tkcalendar matplotlib ttkbootstrap\")\n",
-    "        exit(1)\n",
-    "\n",
-    "    app = FarmTaskTracker()\n",
-    "    app.run()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "dbc0df52-54af-41f7-a83f-e317e266379a",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.12.3"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+import pandas as pd
+import os
+from pathlib import Path
+import tkinter as tk
+from tkinter import ttk, messagebox, filedialog
+from tkcalendar import Calendar
+from datetime import datetime
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.dates as mdates
+from matplotlib.figure import Figure
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
+from ttkbootstrap.tooltip import ToolTip
+import re
+
+class FarmTaskTracker:
+    """A class to manage farm task tracking with a GUI interface."""
+    
+    def __init__(self):
+        # Set default directory for Excel file (user's home directory)
+        self.data_dir = Path.home() / "FarmTasks"
+        self.data_dir.mkdir(exist_ok=True)
+        self.excel_file = self.data_dir / "farm_tasks.xlsx"
+        self.selected_task_id = None
+        self.root = None
+        self.setup_excel_file()
+        self.setup_gui()
+
+    def setup_excel_file(self):
+        """Create the Excel file if it doesn't exist."""
+        try:
+            if not self.excel_file.exists():
+                df = pd.DataFrame(columns=[
+                    "ID", "Job Name", "Description", "Start Date", "End Date",
+                    "Estimated Cost", "Actual Cost", "Status"
+                ])
+                df.to_excel(self.excel_file, index=False)
+        except Exception as e:
+            messagebox.showerror("Hata", f"Excel dosyası oluşturulamadı: {e}")
+
+    def load_tasks(self):
+        """Load tasks from the Excel file."""
+        try:
+            return pd.read_excel(self.excel_file)
+        except Exception as e:
+            messagebox.showerror("Hata", f"Excel dosyası yüklenemedi: {e}")
+            return pd.DataFrame()
+
+    def validate_date(self, date_str):
+        """Validate date format (YYYY-MM-DD)."""
+        try:
+            datetime.strptime(date_str, '%Y-%m-%d')
+            return True
+        except ValueError:
+            return False
+
+    def validate_cost(self, cost_str):
+        """Validate cost input (numeric and non-negative)."""
+        try:
+            return float(cost_str) >= 0
+        except (ValueError, TypeError):
+            return False
+
+    def add_task(self):
+        """Add a new task to the Excel file."""
+        try:
+            name = self.entry_name.get().strip()
+            desc = self.entry_desc.get().strip()
+            start_date = self.entry_start.get().strip()
+            end_date = self.entry_end.get().strip()
+            estimated_cost = self.entry_estimated.get().strip()
+            actual_cost = self.entry_actual.get().strip()
+            status = "Done" if self.check_status.get() else "Waiting"
+
+            # Input validation
+            if not name:
+                messagebox.showerror("Hata", "Görev adı boş olamaz!")
+                return
+            if not (self.validate_date(start_date) and self.validate_date(end_date)):
+                messagebox.showerror("Hata", "Tarih formatı YYYY-MM-DD olmalı!")
+                return
+            if not self.validate_cost(estimated_cost):
+                messagebox.showerror("Hata", "Tahmini maliyet geçerli bir sayı olmalı!")
+                return
+            if status == "Done" and not self.validate_cost(actual_cost):
+                messagebox.showerror("Hata", "Gerçekleşen maliyet geçerli bir sayı olmalı!")
+                return
+
+            estimated_cost = float(estimated_cost)
+            actual_cost = float(actual_cost) if status == "Done" else 0
+
+            df = self.load_tasks()
+            new_id = len(df) + 1
+            new_task = pd.DataFrame([[new_id, name, desc, start_date, end_date,
+                                    estimated_cost, actual_cost, status]], columns=df.columns)
+            df = pd.concat([df, new_task], ignore_index=True)
+            df.to_excel(self.excel_file, index=False)
+            messagebox.showinfo("Başarılı", "Görev başarıyla eklendi!")
+            self.clear_entries()
+            self.show_tasks()
+            self.status_label.configure(text="Görev eklendi.")
+        except Exception as e:
+            messagebox.showerror("Hata", f"Bir hata oluştu: {e}")
+
+    def clear_entries(self):
+        """Clear all input fields."""
+        self.entry_name.delete(0, tk.END)
+        self.entry_desc.delete(0, tk.END)
+        self.entry_start.delete(0, tk.END)
+        self.entry_end.delete(0, tk.END)
+        self.entry_estimated.delete(0, tk.END)
+        self.entry_actual.delete(0, tk.END)
+        self.check_status.set(0)
+
+    def load_selected_task(self):
+        """Load selected task into input fields."""
+        selected = self.table.selection()
+        if not selected:
+            messagebox.showwarning("Uyarı", "Lütfen düzenlemek için bir görev seçin.")
+            return
+
+        values = self.table.item(selected, "values")
+        self.selected_task_id = int(values[0])
+
+        self.clear_entries()
+        self.entry_name.insert(0, values[1])
+        self.entry_desc.insert(0, values[2])
+        self.entry_start.insert(0, values[3])
+        self.entry_end.insert(0, values[4])
+        self.entry_estimated.insert(0, values[5])
+        self.entry_actual.insert(0, values[6])
+        self.check_status.set(1 if values[7] == "Done" else 0)
+        self.status_label.configure(text="Görev düzenlenmek için yüklendi.")
+
+    def update_task(self):
+        """Update the selected task."""
+        if self.selected_task_id is None:
+            messagebox.showerror("Hata", "Güncelleme için görev seçilmedi.")
+            return
+        try:
+            df = self.load_tasks()
+            idx = df[df["ID"] == self.selected_task_id].index[0]
+
+            name = self.entry_name.get().strip()
+            desc = self.entry_desc.get().strip()
+            start_date = self.entry_start.get().strip()
+            end_date = self.entry_end.get().strip()
+            estimated_cost = self.entry_estimated.get().strip()
+            actual_cost = self.entry_actual.get().strip()
+            status = "Done" if self.check_status.get() else "Waiting"
+
+            # Input validation
+            if not name:
+                messagebox.showerror("Hata", "Görev adı boş olamaz!")
+                return
+            if not (self.validate_date(start_date) and self.validate_date(end_date)):
+                messagebox.showerror("Hata", "Tarih formatı YYYY-MM-DD olmalı!")
+                return
+            if not self.validate_cost(estimated_cost):
+                messagebox.showerror("Hata", "Tahmini maliyet geçerli bir sayı olmalı!")
+                return
+            if status == "Done" and not self.validate_cost(actual_cost):
+                messagebox.showerror("Hata", "Gerçekleşen maliyet geçerli bir sayı olmalı!")
+                return
+
+            df.at[idx, "Job Name"] = name
+            df.at[idx, "Description"] = desc
+            df.at[idx, "Start Date"] = start_date
+            df.at[idx, "End Date"] = end_date
+            df.at[idx, "Estimated Cost"] = float(estimated_cost)
+            df.at[idx, "Actual Cost"] = float(actual_cost) if status == "Done" else 0
+            df.at[idx, "Status"] = status
+
+            df.to_excel(self.excel_file, index=False)
+            messagebox.showinfo("Başarılı", "Görev başarıyla güncellendi.")
+            self.selected_task_id = None
+            self.clear_entries()
+            self.show_tasks()
+            self.status_label.configure(text="Görev güncellendi.")
+        except Exception as e:
+            messagebox.showerror("Hata", f"Güncelleme başarısız: {e}")
+
+    def delete_task(self):
+        """Delete the selected task."""
+        try:
+            selected_item = self.table.selection()
+            if not selected_item:
+                messagebox.showerror("Hata", "Lütfen silmek için bir görev seçin!")
+                return
+
+            result = messagebox.askyesno("Onay", "Bu görevi silmek istediğinizden emin misiniz?")
+            if not result:
+                return
+
+            df = self.load_tasks()
+            selected_id = int(self.table.item(selected_item, "values")[0])
+            df = df[df["ID"] != selected_id]
+            df["ID"] = range(1, len(df) + 1)
+            df.to_excel(self.excel_file, index=False)
+            messagebox.showinfo("Başarılı", "Görev başarıyla silindi!")
+            self.clear_entries()
+            self.show_tasks()
+            self.status_label.configure(text="Görev silindi.")
+        except Exception as e:
+            messagebox.showerror("Hata", f"Bir hata oluştu: {e}")
+
+    def show_tasks(self, filter_status=None):
+        """Display tasks in the table, optionally filtered by status."""
+        try:
+            df = self.load_tasks()
+            if filter_status:
+                df = df[df["Status"] == filter_status]
+            self.table.delete(*self.table.get_children())
+            for _, row in df.iterrows():
+                self.table.insert("", "end", values=row.tolist())
+            self.status_label.configure(text=f"{len(df)} görev görüntülendi.")
+        except Exception as e:
+            messagebox.showerror("Hata", f"Görevler yüklenemedi: {e}")
+
+    def show_calendar(self, filtered_df=None, save_as_pdf=False):
+        """Display a calendar view of tasks."""
+        try:
+            df = filtered_df if filtered_df is not None else self.load_tasks()
+            df = df.copy()
+            df["Start Date"] = pd.to_datetime(df["Start Date"], errors="coerce")
+            df["End Date"] = pd.to_datetime(df["End Date"], errors="coerce")
+            df = df.dropna(subset=["Start Date", "End Date"])
+
+            grouped = df.groupby("Job Name")
+            collapsed_tasks = []
+
+            for name, group in grouped:
+                start = group["Start Date"].min()
+                end = group["End Date"].max()
+                desc = " / ".join(group["Description"].dropna().astype(str).unique())
+                collapsed_tasks.append({
+                    "Job Name": name,
+                    "Start Date": start,
+                    "End Date": end,
+                    "Descriptions": desc,
+                    "Details": group
+                })
+
+            collapsed_tasks.sort(key=lambda x: x["Start Date"])
+            fig, ax = plt.subplots(figsize=(14, max(6, len(collapsed_tasks) * 0.5)))
+
+            total_actual = 0
+            total_estimated = 0
+
+            for idx, task in enumerate(collapsed_tasks):
+                start = task["Start Date"]
+                end = task["End Date"]
+                duration = (end - start).days or 1
+
+                done_cost = task["Details"].loc[task["Details"]["Status"] == "Done", "Actual Cost"].sum()
+                wait_cost = task["Details"].loc[task["Details"]["Status"] == "Waiting", "Estimated Cost"].sum()
+                total_cost = done_cost + wait_cost
+
+                done_ratio = done_cost / total_cost if total_cost else 0
+                wait_ratio = wait_cost / total_cost if total_cost else 0
+
+                done_days = int(duration * done_ratio)
+                wait_days = int(duration * wait_ratio)
+
+                done_end = start + pd.Timedelta(days=done_days)
+                wait_end = done_end + pd.Timedelta(days=wait_days)
+
+                if done_cost > 0:
+                    ax.plot([start, done_end], [idx, idx], color="green", linewidth=4)
+                    ax.text(done_end, idx + 0.1, f"Harcanan: {done_cost:,.0f} EUR".replace(",", "."), fontsize=8, va="bottom")
+                    total_actual += done_cost
+
+                if wait_cost > 0:
+                    ax.plot([done_end, wait_end], [idx, idx], color="orange", linewidth=4)
+                    ax.text(wait_end, idx + 0.1, f"Beklenen: {wait_cost:,.0f} EUR".replace(",", "."), fontsize=8, va="bottom")
+                    total_estimated += wait_cost
+
+            ax.set_yticks(range(len(collapsed_tasks)))
+            ax.set_yticklabels([t["Job Name"] for t in collapsed_tasks], fontsize=9)
+            ax.set_title("Görev Zaman Çizelgesi ve Maliyet", fontsize=12, pad=10)
+            ax.grid(True, linestyle="--", linewidth=0.5)
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+            ax.xaxis.set_major_locator(mdates.MonthLocator())
+            plt.xticks(rotation=45)
+            plt.tight_layout()
+
+            ax.text(
+                0.01, -0.12,
+                f"Harcanan: {total_actual:,.0f} EUR | Beklenen: {total_estimated:,.0f} EUR | Toplam: {(total_actual + total_estimated):,.0f} EUR".replace(",", "."),
+                transform=ax.transAxes,
+                fontsize=10,
+                color='black',
+                ha='left'
+            )
+
+            if save_as_pdf:
+                file_path = filedialog.asksaveasfilename(defaultextension=".pdf", filetypes=[("PDF files", "*.pdf")])
+                if file_path:
+                    fig.savefig(file_path, format="pdf", bbox_inches='tight')
+                    messagebox.showinfo("Başarılı", f"Takvim PDF olarak kaydedildi: {file_path}")
+                    self.status_label.configure(text="Takvim PDF olarak kaydedildi.")
+                plt.close(fig)
+            else:
+                cal_window = ttk.Toplevel(self.root)
+                cal_window.title("Takvim Görünümü")
+                cal_window.geometry("1000x600")
+                canvas = FigureCanvasTkAgg(fig, master=cal_window)
+                canvas.draw()
+                canvas.get_tk_widget().pack(fill="both", expand=True)
+                ttk.Button(cal_window, text="PDF Olarak Kaydet", command=lambda: self.show_calendar(filtered_df, save_as_pdf=True), style="primary.TButton").pack(pady=10)
+                self.status_label.configure(text="Takvim açıldı.")
+        except Exception as e:
+            messagebox.showerror("Hata", f"Takvim oluşturulurken hata: {e}")
+
+    def export_calendar_pdf(self):
+        """Export calendar as PDF."""
+        self.show_calendar(save_as_pdf=True)
+
+    def open_calendar_selection(self):
+        """Open a window to select date range for expense calculation and calendar display."""
+        try:
+            popup = ttk.Toplevel(self.root)
+            popup.title("Tarih Aralığı Seç")
+            popup.geometry("300x300")
+
+            ttk.Label(popup, text="Başlangıç Tarihi:").pack(pady=5)
+            cal_start = Calendar(popup, selectmode='day', date_pattern='yyyy-mm-dd')
+            cal_start.pack(pady=5)
+
+            ttk.Label(popup, text="Bitiş Tarihi:").pack(pady=5)
+            cal_end = Calendar(popup, selectmode='day', date_pattern='yyyy-mm-dd')
+            cal_end.pack(pady=5)
+
+            def calculate_and_show_calendar():
+                try:
+                    start = pd.to_datetime(cal_start.get_date())
+                    end = pd.to_datetime(cal_end.get_date())
+
+                    if start > end:
+                        messagebox.showerror("Hata", "Başlangıç tarihi bitiş tarihinden sonra olamaz!")
+                        return
+
+                    df = self.load_tasks()
+                    df["Start Date"] = pd.to_datetime(df["Start Date"], errors="coerce")
+                    df["End Date"] = pd.to_datetime(df["End Date"], errors="coerce")
+
+                    mask = (df["Start Date"] >= start) & (df["End Date"] <= end)
+                    filtered = df.loc[mask].copy()
+
+                    if filtered.empty:
+                        messagebox.showinfo("Bilgi", "Belirtilen tarihler arasında görev bulunamadı.")
+                        return
+
+                    total_actual = filtered.loc[filtered["Status"] == "Done", "Actual Cost"].sum()
+                    total_estimated = filtered.loc[filtered["Status"] == "Waiting", "Estimated Cost"].sum()
+
+                    result_text = f"Toplam Gerçekleşen Maliyet: {total_actual:,.2f} EUR\nToplam Tahmini Maliyet: {total_estimated:,.2f} EUR"
+                    messagebox.showinfo("Harcamalar", result_text)
+                    self.show_calendar(filtered_df=filtered)
+                    self.status_label.configure(text="Harcama hesaplandı ve takvim gösterildi.")
+                except Exception as e:
+                    messagebox.showerror("Hata", f"Bir hata oluştu: {e}")
+
+            ttk.Button(popup, text="Hesapla ve Göster", command=calculate_and_show_calendar, style="primary.TButton").pack(pady=10)
+        except Exception as e:
+            messagebox.showerror("Hata", f"Tarih seçimi penceresi açılırken hata: {e}")
+
+    def export_all_tasks(self):
+        """Export all tasks to a new Excel file."""
+        try:
+            df = self.load_tasks()
+            if df.empty:
+                messagebox.showinfo("Bilgi", "Aktarılacak görev bulunamadı.")
+                return
+
+            file_path = filedialog.asksaveasfilename(
+                defaultextension=".xlsx",
+                filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")]
+            )
+
+            if not file_path:
+                return
+
+            now = datetime.now().strftime("%Y-%m-%d")
+            writer = pd.ExcelWriter(file_path, engine='openpyxl')
+
+            df.to_excel(writer, index=False, sheet_name='Tüm Görevler')
+
+            summary = pd.DataFrame({
+                'Toplam Görev Sayısı': [len(df)],
+                'Tamamlanan Görev Sayısı': [len(df[df['Status'] == 'Done'])],
+                'Bekleyen Görev Sayısı': [len(df[df['Status'] == 'Waiting'])],
+                'Toplam Gerçekleşen Maliyet': [df[df['Status'] == 'Done']['Actual Cost'].sum()],
+                'Toplam Beklenen Maliyet': [df[df['Status'] == 'Waiting']['Estimated Cost'].sum()],
+                'Rapor Tarihi': [now]
+            })
+
+            summary.to_excel(writer, index=False, sheet_name='Özet')
+            writer.close()
+            messagebox.showinfo("Başarılı", f"Tüm görevler dışa aktarıldı: {file_path}")
+            self.status_label.configure(text="Görevler Excel'e aktarıldı.")
+        except Exception as e:
+            messagebox.showerror("Hata", f"Dışa aktarma sırasında hata: {e}")
+
+    def show_statistics(self):
+        """Display task statistics."""
+        try:
+            df = self.load_tasks()
+            if df.empty:
+                messagebox.showinfo("Bilgi", "İstatistik gösterilecek görev bulunamadı.")
+                return
+
+            df["Start Date"] = pd.to_datetime(df["Start Date"], errors="coerce")
+            df["End Date"] = pd.to_datetime(df["End Date"], errors="coerce")
+
+            stats_window = ttk.Toplevel(self.root)
+            stats_window.title("Görev İstatistikleri")
+            stats_window.geometry("800x600")
+
+            total_tasks = len(df)
+            done_tasks = len(df[df["Status"] == "Done"])
+            waiting_tasks = len(df[df["Status"] == "Waiting"])
+            total_actual_cost = df[df["Status"] == "Done"]["Actual Cost"].sum()
+            total_estimated_cost = df[df["Status"] == "Waiting"]["Estimated Cost"].sum()
+            df["Duration"] = (df["End Date"] - df["Start Date"]).dt.days
+            avg_duration = df["Duration"].mean()
+
+            info_frame = ttk.Frame(stats_window)
+            info_frame.pack(pady=10, fill="x")
+            ttk.Label(info_frame, text=f"Toplam Görev Sayısı: {total_tasks}", font=("Arial", 12)).pack(anchor="w", pady=2)
+            ttk.Label(info_frame, text=f"Tamamlanan Görev Sayısı: {done_tasks}", font=("Arial", 12)).pack(anchor="w", pady=2)
+            ttk.Label(info_frame, text=f"Bekleyen Görev Sayısı: {waiting_tasks}", font=("Arial", 12)).pack(anchor="w", pady=2)
+            ttk.Label(info_frame, text=f"Toplam Gerçekleşen Maliyet: {total_actual_cost:,.2f} EUR", font=("Arial", 12)).pack(anchor="w", pady=2)
+            ttk.Label(info_frame, text=f"Toplam Beklenen Maliyet: {total_estimated_cost:,.2f} EUR", font=("Arial", 12)).pack(anchor="w", pady=2)
+            ttk.Label(info_frame, text=f"Ortalama Görev Süresi: {avg_duration:.1f} gün", font=("Arial", 12)).pack(anchor="w", pady=2)
+
+            fig = Figure(figsize=(8, 8))
+            ax1 = fig.add_subplot(221)
+            status_counts = df["Status"].value_counts()
+            ax1.pie(
+                status_counts,
+                labels=status_counts.index,
+                autopct='%1.1f%%',
+                colors=['green', 'orange'] if "Done" in status_counts.index and "Waiting" in status_counts.index else None
+            )
+            ax1.set_title("Görev Durumu Dağılımı")
+
+            ax2 = fig.add_subplot(222)
+            cost_data = [total_actual_cost, total_estimated_cost]
+            ax2.bar(['Gerçekleşen', 'Beklenen'], cost_data, color=['green', 'orange'])
+            ax2.set_title("Maliyet Karşılaştırma")
+            ax2.set_ylabel("EUR")
+
+            ax3 = fig.add_subplot(212)
+            df['Month'] = df['Start Date'].dt.to_period('M')
+            monthly_tasks = df.groupby('Month').size()
+            ax3.plot(range(len(monthly_tasks)), monthly_tasks.values, marker='o')
+            ax3.set_xticks(range(len(monthly_tasks)))
+            ax3.set_xticklabels([str(period) for period in monthly_tasks.index], rotation=45)
+            ax3.set_title("Aylık Görev Sayısı")
+            ax3.set_ylabel("Görev Sayısı")
+            fig.tight_layout()
+
+            canvas = FigureCanvasTkAgg(fig, master=stats_window)
+            canvas.draw()
+            canvas.get_tk_widget().pack(fill="both", expand=True)
+            self.status_label.configure(text="İstatistikler gösterildi.")
+        except Exception as e:
+            messagebox.showerror("Hata", f"İstatistikler oluşturulurken hata: {e}")
+
+    def select_date(self, entry_widget):
+        """Show a date picker and set the selected date in the entry field."""
+        def set_date():
+            selected_date = cal.get_date()
+            entry_widget.delete(0, tk.END)
+            entry_widget.insert(0, selected_date)
+            date_popup.destroy()
+
+        date_popup = ttk.Toplevel(self.root)
+        date_popup.title("Tarih Seç")
+        date_popup.geometry("300x250")
+        cal = Calendar(date_popup, selectmode='day', date_pattern='yyyy-mm-dd')
+        cal.pack(pady=10)
+        ttk.Button(date_popup, text="Seç", command=set_date, style="primary.TButton").pack(pady=5)
+
+    def setup_gui(self):
+        """Set up the GUI with ttkbootstrap."""
+        self.root = ttk.Window(themename="flatly")  # Modern theme
+        self.root.title("Çiftlik Görev Takip")
+        self.root.geometry("1000x800")
+
+        # Main frames
+        input_frame = ttk.LabelFrame(self.root, text="Görev Bilgileri", padding=10)
+        input_frame.pack(fill="x", padx=10, pady=5)
+        button_frame = ttk.Frame(self.root)
+        button_frame.pack(fill="x", padx=10, pady=5)
+        table_frame = ttk.Frame(self.root)
+        table_frame.pack(fill="both", expand=True, padx=10, pady=5)
+        status_frame = ttk.Frame(self.root)
+        status_frame.pack(fill="x", padx=10, pady=5)
+
+        # Status bar
+        self.status_label = ttk.Label(status_frame, text="Hazır", relief="sunken", anchor="w")
+        self.status_label.pack(fill="x")
+
+        # Input fields
+        field_width = 40
+        row1 = ttk.Frame(input_frame)
+        row1.pack(fill="x", padx=5, pady=5)
+        ttk.Label(row1, text="Görev Adı:").grid(row=0, column=0, padx=5, pady=2, sticky="w")
+        self.entry_name = ttk.Entry(row1, width=field_width)
+        self.entry_name.grid(row=0, column=1, padx=5, pady=2, sticky="w")
+        ToolTip(self.entry_name, "Görev adını buraya girin (örn: Elma Hasadı)")
+        ttk.Label(row1, text="Açıklama:").grid(row=0, column=2, padx=5, pady=2, sticky="w")
+        self.entry_desc = ttk.Entry(row1, width=field_width)
+        self.entry_desc.grid(row=0, column=3, padx=5, pady=2, sticky="w")
+        ToolTip(self.entry_desc, "Görevle ilgili detaylı açıklama")
+
+        row2 = ttk.Frame(input_frame)
+        row2.pack(fill="x", padx=5, pady=5)
+        ttk.Label(row2, text="Başlangıç Tarihi:").grid(row=0, column=0, padx=5, pady=2, sticky="w")
+        date_frame1 = ttk.Frame(row2)
+        date_frame1.grid(row=0, column=1, padx=5, pady=2, sticky="w")
+        self.entry_start = ttk.Entry(date_frame1, width=field_width-5)
+        self.entry_start.pack(side="left")
+        ttk.Button(date_frame1, text="...", width=3, command=lambda: self.select_date(self.entry_start), style="secondary.TButton").pack(side="left")
+        ToolTip(self.entry_start, "Başlangıç tarihi (YYYY-MM-DD)")
+        ttk.Label(row2, text="Bitiş Tarihi:").grid(row=0, column=2, padx=5, pady=2, sticky="w")
+        date_frame2 = ttk.Frame(row2)
+        date_frame2.grid(row=0, column=3, padx=5, pady=2, sticky="w")
+        self.entry_end = ttk.Entry(date_frame2, width=field_width-5)
+        self.entry_end.pack(side="left")
+        ttk.Button(date_frame2, text="...", width=3, command=lambda: self.select_date(self.entry_end), style="secondary.TButton").pack(side="left")
+        ToolTip(self.entry_end, "Bitiş tarihi (YYYY-MM-DD)")
+
+        row3 = ttk.Frame(input_frame)
+        row3.pack(fill="x", padx=5, pady=5)
+        ttk.Label(row3, text="Tahmini Maliyet (EUR):").grid(row=0, column=0, padx=5, pady=2, sticky="w")
+        self.entry_estimated = ttk.Entry(row3, width=field_width)
+        self.entry_estimated.grid(row=0, column=1, padx=5, pady=2, sticky="w")
+        ToolTip(self.entry_estimated, "Tahmini maliyet (sayı, örn: 1000)")
+        self.check_status = tk.BooleanVar()
+        status_check = ttk.Checkbutton(row3, text="Tamamlandı?", variable=self.check_status)
+        status_check.grid(row=0, column=2, padx=5, pady=2, sticky="w")
+        ToolTip(status_check, "Görevin tamamlanıp tamamlanmadığını işaretleyin")
+        ttk.Label(row3, text="Gerçekleşen Maliyet (EUR):").grid(row=0, column=3, padx=5, pady=2, sticky="w")
+        self.entry_actual = ttk.Entry(row3, width=field_width-10)
+        self.entry_actual.grid(row=0, column=4, padx=5, pady=2, sticky="w")
+        ToolTip(self.entry_actual, "Gerçekleşen maliyet (tamamlandıysa, örn: 950)")
+
+        # Buttons
+        button_width = 20
+        button_row1 = ttk.Frame(button_frame)
+        button_row1.pack(fill="x", padx=5, pady=2)
+        ttk.Button(button_row1, text="Görev Ekle", width=button_width, command=self.add_task, style="primary.TButton").pack(side="left", padx=5)
+        ttk.Button(button_row1, text="Görevi Düzenle", width=button_width, command=self.load_selected_task, style="secondary.TButton").pack(side="left", padx=5)
+        ttk.Button(button_row1, text="Görevi Güncelle", width=button_width, command=self.update_task, style="success.TButton").pack(side="left", padx=5)
+        ttk.Button(button_row1, text="Görevi Sil", width=button_width, command=self.delete_task, style="danger.TButton").pack(side="left", padx=5)
+
+        button_row2 = ttk.Frame(button_frame)
+        button_row2.pack(fill="x", padx=5, pady=2)
+        ttk.Button(button_row2, text="Tüm Görevler", width=button_width, command=lambda: self.show_tasks(None), style="info.TButton").pack(side="left", padx=5)
+        ttk.Button(button_row2, text="Tamamlananlar", width=button_width, command=lambda: self.show_tasks("Done"), style="success.TButton").pack(side="left", padx=5)
+        ttk.Button(button_row2, text="Bekleyenler", width=button_width, command=lambda: self.show_tasks("Waiting"), style="warning.TButton").pack(side="left", padx=5)
+
+        button_row3 = ttk.Frame(button_frame)
+        button_row3.pack(fill="x", padx=5, pady=2)
+        ttk.Button(button_row3, text="Takvimi Aç", width=button_width, command=self.show_calendar, style="primary.TButton").pack(side="left", padx=5)
+        ttk.Button(button_row3, text="Takvimi PDF'e Aktar", width=button_width, command=self.export_calendar_pdf, style="secondary.TButton").pack(side="left", padx=5)
+        ttk.Button(button_row3, text="Harcama Hesapla", width=button_width, command=self.open_calendar_selection, style="info.TButton").pack(side="left", padx=5)
+        ttk.Button(button_row3, text="İstatistikleri Göster", width=button_width, command=self.show_statistics, style="success.TButton").pack(side="left", padx=5)
+
+        button_row4 = ttk.Frame(button_frame)
+        button_row4.pack(fill="x", padx=5, pady=2)
+        ttk.Button(button_row4, text="Tüm Görevleri Dışa Aktar", width=button_width, command=self.export_all_tasks, style="primary.TButton").pack(side="left", padx=5)
+        ttk.Button(button_row4, text="Temizle", width=button_width, command=self.clear_entries, style="secondary.TButton").pack(side="left", padx=5)
+
+        # Table
+        columns = ("ID", "Job Name", "Description", "Start Date", "End Date", "Estimated Cost", "Actual Cost", "Status")
+        self.table = ttk.Treeview(table_frame, columns=columns, show="headings", style="Treeview")
+        column_widths = {
+            "ID": 50,
+            "Job Name": 150,
+            "Description": 200,
+            "Start Date": 100,
+            "End Date": 100,
+            "Estimated Cost": 100,
+            "Actual Cost": 100,
+            "Status": 80
+        }
+        for col in columns:
+            self.table.heading(col, text=col)
+            self.table.column(col, width=column_widths[col])
+        scrollbar_y = ttk.Scrollbar(table_frame, orient="vertical", command=self.table.yview)
+        scrollbar_x = ttk.Scrollbar(table_frame, orient="horizontal", command=self.table.xview)
+        self.table.configure(yscrollcommand=scrollbar_y.set, xscrollcommand=scrollbar_x.set)
+        scrollbar_y.pack(side="right", fill="y")
+        scrollbar_x.pack(side="bottom", fill="x")
+        self.table.pack(side="left", fill="both", expand=True)
+
+        # Show initial tasks
+        self.show_tasks()
+
+    def run(self):
+        """Start the application."""
+        self.root.mainloop()
+
+if __name__ == "__main__":
+    try:
+        import pandas
+        import openpyxl
+        import tkcalendar
+        import matplotlib
+    except ImportError as e:
+        print(f"Hata: Gerekli kütüphane eksik: {e}")
+        print("Lütfen aşağıdaki komutları çalıştırarak gerekli kütüphaneleri kurun:")
+        print("pip install pandas openpyxl tkcalendar matplotlib ttkbootstrap")
+        exit(1)
+
+    app = FarmTaskTracker()
+    app.run()
